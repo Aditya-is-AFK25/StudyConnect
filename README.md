@@ -1,6 +1,6 @@
 # StudyConnect
 
-> A MERN stack web app that helps students find and connect with the right study partners — built by a team, for students.
+> A MERN stack web app that helps students find and connect with the right study partners — built by a team of students, for students.
 
 ---
 
