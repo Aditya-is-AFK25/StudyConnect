@@ -1,12 +1,14 @@
 # StudyConnect
 
+# StudyConnect
+
 > A MERN stack web app that helps students find and connect with the right study partners — built by a team, for students.
 
 ---
 
 ## What is StudyConnect?
 
-StudyConnect matches students based on their **subjects, university, and availability**, making it easy to find a study partner who's on the same page — literally.
+StudyConnect matches students based on their **subjects and availability**, making it easy to find a study partner who's on the same page — literally.
 
 Whether you're cramming for finals or looking for a long-term study buddy, StudyConnect has you covered.
 
@@ -29,10 +31,26 @@ Whether you're cramming for finals or looking for a long-term study buddy, Study
 
 ---
 
+## Getting Started
+
+_Setup instructions coming soon — once frontend/backend scaffolding is complete._
+
+---
+
 ## Team
 
-Built with ❤️ by the StudyConnect team.
+| Name | Role |
+|---|---|
+| Aditya Pratap Singh | Frontend |
+| Parshvi Jain | Backend |
+| Khushboo Joshi | Backend |
+| Vignesh Sriram Iyer | Backend |
 
+---
+
+## License
+
+[MIT](./LICENSE)
 ---
 
 ## License
