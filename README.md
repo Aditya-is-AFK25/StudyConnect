@@ -41,7 +41,7 @@ _Setup instructions coming soon — once frontend/backend scaffolding is complet
 |---|---|
 | Aditya Pratap Singh | Frontend |
 | Parshvi Jain | Backend |
-| Khushboo Joshi | Backend |
+| Khushboo Joshi | Frontend|
 | Vignesh Sriram Iyer | Backend |
 
 ---
