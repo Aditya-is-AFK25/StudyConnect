@@ -1,2 +1,554 @@
-/* aditya.css — Aditya's styles */
-/* TODO: Add styles for your pages and components */
+/* ---------------------------------------------
+   FONTS & RESET
+   Fonts are loaded via <link> in src/routes/__root.tsx
+   --------------------------------------------- */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #F5EFE2;
+  --cream-2: #EFE7D4;
+  --card-bg: #fffdf7;
+  --ink: #23281F;
+  --forest: #3B5741;
+  --gold: #C68F2E;
+  --coral: #C1543C;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.app-container {
+  background-color: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* subtle paper grain */
+  background-image:
+    radial-gradient(rgba(35,40,31,0.05) 1px, transparent 1px),
+    radial-gradient(rgba(35,40,31,0.03) 1px, transparent 1px);
+  background-size: 22px 22px, 37px 37px;
+  background-position: 0 0, 11px 11px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.home-page {
+  overflow-x: hidden;
+}
+
+/* Dark Mode Override Colors */
+.dark-mode {
+  --cream: #1C211A;      /* dark background */
+  --cream-2: #2B3328;    /* card backgrounds / secondary */
+  --card-bg: #222820;    /* card background */
+  --ink: #F5EFE2;        /* cream text */
+  --forest: #8FAD95;     /* lighter green */
+  --gold: #DCA94E;       /* warm gold */
+  --coral: #D67C69;      /* warm coral */
+}
+
+.dark-mode.app-container {
+  /* Update background-image dots to use white instead of dark green */
+  background-image:
+    radial-gradient(rgba(245,239,226,0.08) 1px, transparent 1px),
+    radial-gradient(rgba(245,239,226,0.04) 1px, transparent 1px);
+}
+
+/* ---------------------------------------------
+   NAVBAR — editorial masthead with rule line
+   --------------------------------------------- */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 5% 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-bottom: 1px solid rgba(35,40,31,0.2);
+}
+
+.logo-block { display: flex; flex-direction: column; line-height: 1; }
+.logo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--ink);
+}
+.logo-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--forest);
+  margin-top: 0.25rem;
+}
+
+.nav-actions { display: flex; align-items: center; gap: 1.5rem; }
+.nav-link {
+  font-size: 0.9rem; font-weight: 500; color: var(--ink);
+  text-decoration: none; position: relative;
+}
+.nav-link::after {
+  content: ''; position: absolute; left: 0; bottom: -4px;
+  width: 100%; height: 2px; background: var(--coral);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.nav-link:hover::after { transform: scaleX(1); }
+
+.nav-button {
+  font-size: 0.9rem; font-weight: 600;
+  color: var(--cream); background: var(--ink);
+  border: none; border-radius: 999px;
+  padding: 0.6rem 1.4rem; cursor: pointer; text-decoration: none;
+  transition: background 0.2s;
+}
+.nav-button:hover { background: var(--forest); }
+
+/* ---------------------------------------------
+   SECTION LABEL — running header "§ 01 — HOW IT WORKS"
+   --------------------------------------------- */
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--forest);
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.section-label::before {
+  content: ''; width: 40px; height: 1px; background: var(--forest);
+}
+
+/* ---------------------------------------------
+   HERO — asymmetric editorial with oversized display
+   --------------------------------------------- */
+.hero {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  padding: 5rem 5% 6rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(3rem, 6vw, 5.25rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 1.75rem;
+}
+.hero-title .accent {
+  font-style: italic; font-weight: 400; color: var(--forest);
+}
+.hero-title .underline {
+  position: relative; display: inline-block;
+}
+.hero-title .underline::after {
+  content: ''; position: absolute; left: -2%; right: -2%; bottom: 0.08em;
+  height: 0.35em; background: var(--gold); opacity: 0.4; z-index: -1;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--ink); opacity: 0.8;
+  margin-bottom: 2.25rem; max-width: 480px;
+}
+
+.hero-actions { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+.hero-cta {
+  font-size: 0.95rem; font-weight: 600;
+  color: var(--cream); background: var(--forest);
+  border: none; border-radius: 999px;
+  padding: 1rem 1.75rem; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: transform 0.2s, background 0.2s;
+}
+.hero-cta:hover { background: #2d4333; transform: translateY(-2px); }
+.hero-cta .arrow { transition: transform 0.2s; }
+.hero-cta:hover .arrow { transform: translateX(4px); }
+
+.hero-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink); opacity: 0.6;
+}
+
+/* index card visual */
+.cards-visual {
+  position: relative;
+  min-height: 420px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.spark {
+  position: absolute;
+  top: 45%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: var(--coral);
+  color: var(--cream);
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1.4rem;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 5;
+  box-shadow: 0 8px 20px rgba(193, 84, 60, 0.35);
+}
+
+.index-card {
+  width: 250px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  padding: 1.25rem;
+  box-shadow: 8px 8px 0 var(--ink);
+  position: absolute;
+  transition: transform 0.3s;
+}
+.index-card:hover { transform: translateY(-4px) rotate(0deg) !important; }
+
+.card-one { transform: rotate(-7deg); left: 0; top: 20px; z-index: 2; }
+.card-two { transform: rotate(6deg); right: 0; bottom: 20px; z-index: 3; background: var(--cream-2); }
+
+.card-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 1px dashed rgba(35,40,31,0.3);
+  padding-bottom: 0.5rem; margin-bottom: 0.75rem;
+}
+.card-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem; font-weight: 600;
+  color: var(--ink);
+}
+.card-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--forest);
+}
+.card-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem; font-weight: 500;
+  color: var(--ink); opacity: 0.6;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+
+.subject-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  background: transparent; color: var(--ink);
+  border: 1px solid rgba(35,40,31,0.4);
+  border-radius: 3px;
+  padding: 0.25rem 0.55rem;
+}
+.tag.match {
+  background: var(--gold); color: var(--cream);
+  border-color: var(--gold);
+}
+
+/* ---------------------------------------------
+   TICKER — scrolling stats/subjects strip
+   --------------------------------------------- */
+.ticker {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 1rem 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(245,239,226,0.15);
+  border-bottom: 1px solid rgba(245,239,226,0.15);
+}
+.ticker-track {
+  display: flex; gap: 3rem;
+  white-space: nowrap;
+  animation: scroll 40s linear infinite;
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-style: italic;
+}
+.ticker-item { display: inline-flex; align-items: center; gap: 3rem; }
+.ticker-item::after {
+  content: '✦'; color: var(--gold); font-style: normal;
+}
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ---------------------------------------------
+   HOW IT WORKS — big hanging numerals, no boxes
+   --------------------------------------------- */
+.how-it-works {
+  padding: 6rem 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 3.5rem;
+  max-width: 700px;
+  line-height: 1.05;
+}
+.section-title em { font-style: italic; color: var(--forest); }
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  border-top: 1px solid rgba(35,40,31,0.2);
+  padding-top: 3rem;
+}
+
+.step { position: relative; padding-top: 0.5rem; }
+.step-number {
+  font-family: 'Fraunces', serif;
+  font-size: 5rem; font-weight: 300;
+  font-style: italic;
+  line-height: 1;
+  color: var(--coral);
+  margin-bottom: 1rem;
+  display: block;
+}
+.step-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.35rem; font-weight: 600;
+  color: var(--ink); margin-bottom: 0.5rem;
+}
+.step-description {
+  font-size: 0.95rem;
+  color: var(--ink); opacity: 0.8;
+  max-width: 280px;
+}
+
+/* ---------------------------------------------
+   FEATURES — bento grid, mixed sizes & colors
+   --------------------------------------------- */
+.features {
+  padding: 4rem 5% 6rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.features-bento {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: minmax(240px, auto);
+  gap: 1.5rem;
+}
+
+.feature-card {
+  border-radius: 16px;
+  padding: 1.75rem;
+  position: relative;
+  overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between;
+  transition: transform 0.25s;
+}
+.feature-card:hover { transform: translateY(-4px); }
+
+.feature-card .feature-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+.feature-card .feature-description {
+  font-size: 0.9rem; opacity: 0.85;
+}
+.feature-icon {
+  font-size: 1.5rem;
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.2);
+}
+
+/* variants */
+.feature-notes {
+  grid-column: span 2;
+  background: var(--forest); color: var(--cream);
+}
+.feature-groups {
+  background: var(--cream-2); color: var(--ink);
+  border: 1.5px solid var(--ink);
+}
+.feature-groups .feature-icon { background: var(--gold); color: var(--cream); }
+
+.feature-sessions {
+  background: var(--gold); color: #23281F;
+}
+.feature-sessions .feature-icon { background: rgba(35,40,31,0.12); }
+
+.feature-progress {
+  grid-column: span 2;
+  background: var(--coral); color: var(--cream);
+}
+
+/* ---------------------------------------------
+   TESTIMONIAL / QUOTE — editorial pull quote
+   --------------------------------------------- */
+.pull-quote {
+  padding: 5rem 5%;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+.pull-quote::before {
+  content: '"';
+  font-family: 'Fraunces', serif;
+  font-size: 10rem;
+  color: var(--gold);
+  opacity: 0.3;
+  position: absolute;
+  top: -2rem; left: 50%;
+  transform: translateX(-50%);
+  line-height: 1;
+}
+.pull-quote-text {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1.3;
+  max-width: 800px;
+  margin: 0 auto 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.pull-quote-attr {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--forest);
+}
+
+/* ---------------------------------------------
+   FINAL CTA — stamp-like banner
+   --------------------------------------------- */
+.final-cta {
+  padding: 4rem 5% 6rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cta-box {
+  background: var(--forest);
+  color: var(--cream);
+  border-radius: 24px;
+  padding: 4rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+.cta-box::before {
+  content: '';
+  position: absolute; inset: 12px;
+  border: 1.5px dashed rgba(245,239,226,0.3);
+  border-radius: 16px;
+  pointer-events: none;
+}
+.cta-stamp {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.25rem;
+}
+.cta-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 500;
+  line-height: 1.05;
+  margin-bottom: 1rem;
+  max-width: 700px;
+  margin-left: auto; margin-right: auto;
+}
+.cta-title em { font-style: italic; color: var(--gold); }
+.cta-subtitle {
+  font-size: 1.05rem; opacity: 0.85;
+  margin-bottom: 2rem;
+}
+.cta-button {
+  font-size: 1rem; font-weight: 600;
+  color: #23281F; background: var(--gold);
+  border: none; border-radius: 999px;
+  padding: 1rem 2rem; cursor: pointer;
+  text-decoration: none; display: inline-block;
+  transition: transform 0.2s, background 0.2s;
+}
+.cta-button:hover { background: #b3811f; transform: translateY(-2px); }
+
+/* ---------------------------------------------
+   FOOTER
+   --------------------------------------------- */
+.footer {
+  padding: 2.5rem 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(35,40,31,0.15);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink); opacity: 0.6;
+}
+
+/* ---------------------------------------------
+   RESPONSIVE
+   --------------------------------------------- */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 5%; }
+  .cards-visual { min-height: 380px; }
+  .index-card { width: 220px; }
+  .card-one { left: 5%; }
+  .card-two { right: 5%; }
+  .steps-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .features-bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .feature-notes, .feature-progress { grid-column: span 1; }
+  .feature-card { min-height: 180px; }
+  .cta-box { padding: 3rem 1.5rem; }
+}
+
+.dark-mode .cta-box {
+  background: #233527;
+  color: #F5EFE2;
+}
