@@ -3,11 +3,13 @@
 
 import React from "react";
 
+import "../styles/khushboo.css";
+
 function LoadingSpinner() {
   return (
-    <div>
-      <p>Loading...</p>
-      {/* TODO: Build loading spinner UI here */}
+    <div className="spinner-container">
+      <div className="loading-spinner"></div>
+      <p className="loading-text">Loading, please wait...</p>
     </div>
   );
 }
