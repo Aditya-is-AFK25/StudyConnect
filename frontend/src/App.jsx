@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 
@@ -20,27 +20,31 @@ import ProgressTrackerPage from "./pages/khushboo/ProgressTrackerPage";
 import NotFoundPage from "./pages/khushboo/NotFoundPage";
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
+
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Navbar />
-        <Routes>
+        <div className={`app-container ${darkMode ? "dark-mode" : ""}`}>
+          <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
+          <Routes>
 
-          {/* ── ADITYA'S ROUTES ── */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/profile/edit" element={<EditProfilePage />} />
-          <Route path="/match" element={<MatchingPage />} />
+            {/* ── ADITYA'S ROUTES ── */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/profile/edit" element={<EditProfilePage />} />
+            <Route path="/match" element={<MatchingPage />} />
 
-          {/* ── KHUSHBOO'S ROUTES ── */}
-          <Route path="/notes" element={<NotesPage />} />
-          <Route path="/groups" element={<StudyGroupsPage />} />
-          <Route path="/sessions" element={<StudySessionsPage />} />
-          <Route path="/progress" element={<ProgressTrackerPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+            {/* ── KHUSHBOO'S ROUTES ── */}
+            <Route path="/notes" element={<NotesPage />} />
+            <Route path="/groups" element={<StudyGroupsPage />} />
+            <Route path="/sessions" element={<StudySessionsPage />} />
+            <Route path="/progress" element={<ProgressTrackerPage />} />
+            <Route path="*" element={<NotFoundPage />} />
 
-        </Routes>
+          </Routes>
+        </div>
       </BrowserRouter>
     </AuthProvider>
   );
