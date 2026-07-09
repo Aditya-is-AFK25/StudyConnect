@@ -56,9 +56,37 @@ function Navbar({ darkMode, setDarkMode }) {
           Otherwise, show Login and Register links.
         */}
         {user ? (
-          <>
-            <Link to="/profile/edit" className="nav-link">Profile</Link>
-            <Link to="/match" className="nav-link">Peers</Link>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <Link to="/match" className="nav-link">Find Peers</Link>
+            <Link 
+              to="/profile/edit" 
+              style={{ 
+                display: "flex", 
+                alignItems: "center", 
+                gap: "0.5rem", 
+                textDecoration: "none", 
+                color: "inherit" 
+              }}
+            >
+              <div style={{
+                width: "34px",
+                height: "34px",
+                borderRadius: "50%",
+                backgroundColor: "var(--teal)",
+                color: "#ffffff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: "700",
+                fontSize: "0.95rem",
+                textTransform: "uppercase"
+              }}>
+                {user.name ? user.name[0] : "U"}
+              </div>
+              <span className="nav-link" style={{ margin: 0, fontWeight: "600" }}>
+                {user.name?.split(" ")[0]}
+              </span>
+            </Link>
             <button 
               onClick={logout} 
               className="nav-button" 
@@ -66,7 +94,7 @@ function Navbar({ darkMode, setDarkMode }) {
             >
               Logout
             </button>
-          </>
+          </div>
         ) : (
           <>
             <Link to="/login" className="nav-link">Login</Link>
