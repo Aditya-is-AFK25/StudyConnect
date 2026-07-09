@@ -552,3 +552,7 @@ body {
   background: #233527;
   color: #F5EFE2;
 }
+
+.dropdown-item-hover:hover {
+  background-color: var(--cream-2);
+}
