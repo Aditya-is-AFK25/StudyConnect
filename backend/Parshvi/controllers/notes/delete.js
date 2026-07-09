@@ -1,4 +1,4 @@
-const Delete = require("../../models/note");
+const Note = require("../../models/note");
 module.exports = async (req, res) => {
 
     try {
