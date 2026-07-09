@@ -1,26 +1,49 @@
 // Task: Edit Profile form with validation
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/aditya.css";
+import { getProfile, updateProfile } from "../../services/api";
 
 function EditProfilePage() {
   // 1. STATE MANAGEMENT
-  const [name, setName] = useState("Aditya Pratap Singh");
-  const [bio, setBio] = useState(
-    "Bachelor of Computer Application student passionate about Cybersecurity",
-  );
-  const [selectedSubjects, setSelectedSubjects] = useState([
-    "Python",
-    "Database Management",
-    "Network Security",
-  ]);
-  const [selectedAvailability, setSelectedAvailability] = useState([
-    "Monday-Afternoon",
-    "Tuesday-Evening",
-  ]);
+  const [name, setName] = useState("");
+  const [bio, setBio] = useState("");
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
+  const [selectedAvailability, setSelectedAvailability] = useState([]);
   const [environment, setEnvironment] = useState("Library");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // 2. DATA FETCHING ON MOUNT (useEffect Hook)
+  // useEffect allows us to perform "side effects" in functional components.
+  // The empty dependency array [] as the second argument ensures that this
+  // hook runs exactly ONCE, right after the page loads (component mounts).
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        setErrorMessage("");
+        
+        // Call the GET /api/auth/profile service
+        const response = await getProfile();
+        const data = response.data;
+
+        // Populate our state variables with the data returned from MongoDB
+        setName(data.name || "");
+        setBio(data.bio || "");
+        setSelectedSubjects(data.subjects || []);
+        setSelectedAvailability(data.availability || []);
+        setEnvironment(data.environment || "Library");
+        setLoading(false);
+      } catch (err) {
+        // If the token is invalid/expired or the backend is offline
+        setErrorMessage("Failed to load your profile details. Please verify your login session.");
+        setLoading(false);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
 
   const availableSubjects = [
     // Computer Applications (BCA)
@@ -48,7 +71,7 @@ function EditProfilePage() {
   const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
   const timeslots = ["Morning", "Afternoon", "Evening"];
 
-  // 2. DYNAMIC SELECTION TOGGLERS
+  // 3. DYNAMIC SELECTION TOGGLERS
   const handleSubjectToggle = (subject) => {
     if (selectedSubjects.includes(subject)) {
       setSelectedSubjects(selectedSubjects.filter((s) => s !== subject));
@@ -65,8 +88,8 @@ function EditProfilePage() {
     }
   };
 
-  // 3. FORM SUBMISSION WITH BASIC VALIDATION
-  const handleSubmit = (e) => {
+  // 4. FORM SUBMISSION WITH VALIDATION AND BACKEND SAVE
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
@@ -85,11 +108,34 @@ function EditProfilePage() {
       return;
     }
 
-    // Mock validation success response
-    setSuccessMessage(
-      "Your peer profile details have been saved successfully!",
-    );
+    try {
+      // POST/PUT the updated user details back to MongoDB
+      await updateProfile({
+        name,
+        bio,
+        subjects: selectedSubjects,
+        availability: selectedAvailability,
+        environment,
+      });
+
+      setSuccessMessage("Your peer profile details have been saved successfully!");
+    } catch (err) {
+      setErrorMessage(
+        err.response?.data?.message || "Failed to save profile changes. Please try again."
+      );
+    }
   };
+
+  // Render a loading state if data is still fetching on load
+  if (loading) {
+    return (
+      <div style={{ padding: "8rem 5%", textAlign: "center", fontFamily: "inherit" }}>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", color: "var(--forest)" }}>
+          Loading your peer profile details...
+        </h2>
+      </div>
+    );
+  }
 
   return (
     <div
