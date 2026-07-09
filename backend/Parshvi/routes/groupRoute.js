@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 const groupController = require("../controllers/group");
+const auth = require("../../vignesh/middleware/auth");
 
-router.post("/", groupController.create);
+router.post("/",auth, groupController.create);
 router.get("/", groupController.read);
-// router.put("/:id", notesController.update);
-// router.delete("/:id", notesController.delete);
-
+router.put("/:id/join",auth, groupController.join);
+router.put("/:id", auth, groupController.update);
+router.delete("/:id", auth, groupController.delete);
 module.exports = router;

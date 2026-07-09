@@ -3,7 +3,7 @@ const Note = require("../../models/note");
 module.exports = async (req, res) => {
     try {
         const notes = await Note.find({
-            subject: req.params.subject
+            subject: req.params.subject // will read by subject
         });
         res.json(notes);
     } catch (err) {
