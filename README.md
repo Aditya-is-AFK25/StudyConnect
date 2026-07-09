@@ -38,10 +38,11 @@ Whether you're cramming for finals or looking for a long-term study buddy, Study
     *   [ ] Register / Login Forms & API integration
     *   [ ] Matching Recommendation UI
 *   **Khushboo's Tasks (Frontend):**
-    *   [ ] Notes Page
-    *   [ ] Study Groups Page
-    *   [ ] Study Sessions Page
-    *   [ ] Progress Tracker Page
+    *   [x] Notes Page (in-memory document upload, filter feed, and deletion CRUD complete)
+    *   [/] Study Groups Page (UI layout complete, live server endpoints configured, backend database saving pending)
+    *   [/] Study Sessions Page (UI layout complete, in-memory scheduling and RSVP flags complete)
+    *   [/] Progress Tracker Page (UI layout and task checklist complete)
+    *   [x] NotFound Page (complete)
 *   **Vignesh's Tasks (Backend):**
     *   [x] Mongoose User Schema
     *   [x] JWT Authentication & Protected Middleware
