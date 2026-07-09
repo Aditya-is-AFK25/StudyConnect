@@ -25,13 +25,51 @@ Whether you're cramming for finals or looking for a long-term study buddy, Study
 
 ## Project Status
 
-🚧 **Currently in setup — active development starting soon.**
+🚀 **Active Development has started!**
+
+### Progress Checklist:
+*   [x] Initial Frontend & Backend Scaffolding
+*   [x] API Service Layer Integration (`services/api.js`)
+*   **Aditya's Tasks (Frontend):**
+    *   [x] Landing / Home Page
+    *   [x] Navbar Navigation & Theme Toggle
+    *   [x] Edit Profile Page UI & Backend API integration
+    *   [ ] Register / Login Forms & API integration
+    *   [ ] Matching Recommendation UI
+*   **Khushboo's Tasks (Frontend):**
+    *   [ ] Notes Page
+    *   [ ] Study Groups Page
+    *   [ ] Study Sessions Page
+    *   [ ] Progress Tracker Page
+*   **Vignesh's Tasks (Backend):**
+    *   [x] Mongoose User Schema
+    *   [x] JWT Authentication & Protected Middleware
+    *   [x] Auth APIs & Matching Recommendation algorithm
+*   **Parshvi's Tasks (Backend):**
+    *   [x] Notes CRUD APIs & Note Model
+    *   [ ] Groups, Sessions, and Progress APIs
 
 ---
 
 ## Getting Started
 
-_Setup instructions coming soon — once frontend/backend scaffolding is complete._
+### Prerequisites:
+*   Node.js (v18+)
+*   MongoDB running locally (`mongodb://127.0.0.1:27017/studyconnect`)
+
+### Installation & Run:
+1.  **Start Backend Server**:
+    ```bash
+    cd backend
+    npm install
+    npm start
+    ```
+2.  **Start Frontend Dev Server**:
+    ```bash
+    cd frontend
+    npm install
+    npm run dev
+    ```
 
 ---
 
@@ -44,11 +82,6 @@ _Setup instructions coming soon — once frontend/backend scaffolding is complet
 | Khushboo Joshi | Frontend|
 | Vignesh Sriram Iyer | Backend |
 
----
-
-## License
-
-[MIT](./LICENSE)
 ---
 
 ## License

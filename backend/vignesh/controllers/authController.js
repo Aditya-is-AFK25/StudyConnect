@@ -3,7 +3,7 @@ const generateToken = require('../utils/generateToken');
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, subjects, availability, environment } = req.body;
+    const { name, email, password, bio, subjects, availability, environment } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Please fill all fields' });
@@ -18,6 +18,7 @@ exports.register = async (req, res) => {
       name,
       email,
       password,
+      bio: bio || '',
       subjects: subjects || [],
       availability: availability || [],
       environment: environment || 'Library',
@@ -27,6 +28,7 @@ exports.register = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      bio: user.bio,
       subjects: user.subjects,
       availability: user.availability,
       environment: user.environment,
@@ -50,6 +52,7 @@ exports.login = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      bio: user.bio,
       subjects: user.subjects,
       availability: user.availability,
       environment: user.environment,
@@ -76,6 +79,7 @@ exports.updateProfile = async (req, res) => {
     }
 
     user.name = req.body.name || user.name;
+    user.bio = req.body.bio !== undefined ? req.body.bio : user.bio;
     user.subjects = req.body.subjects || user.subjects;
     user.availability = req.body.availability || user.availability;
     user.environment = req.body.environment || user.environment;
