@@ -49,6 +49,7 @@ Whether you're cramming for finals or looking for a long-term study buddy, Study
     *   [x] Auth APIs & Matching Recommendation algorithm
 *   **Parshvi's Tasks (Backend):**
     *   [x] Notes CRUD APIs & Note Model
+    *   [x] Frontend-to-Backend Notes Integration (with Khushboo's Notes page)
     *   [ ] Groups, Sessions, and Progress APIs
 
 ---
