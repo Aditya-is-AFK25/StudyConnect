@@ -2,6 +2,7 @@
 // Task: Notes Sharing — upload form, list view, filter by subject, delete
 
 import React, { useState } from "react";
+import "../../styles/khushboo.css";
 
 
 function NotesPage() {
