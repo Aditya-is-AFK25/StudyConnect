@@ -31,4 +31,10 @@ export const updateProfile = (data) => api.put("/auth/profile", data);
 // ─── MATCHING ────────────────────────────────────────────
 export const getMatches    = ()     => api.get("/match/matches");
 
+// ─── NOTES ───────────────────────────────────────────────
+export const getNotes      = ()     => api.get("/notes");
+export const createNote    = (data) => api.post("/notes", data);
+export const updateNote    = (id, data) => api.put(`/notes/${id}`, data);
+export const deleteNoteApi = (id)   => api.delete(`/notes/${id}`);
+
 export default api;

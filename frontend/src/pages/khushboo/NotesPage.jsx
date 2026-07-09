@@ -1,44 +1,61 @@
 // NotesPage.jsx — Khushboo
 // Task: Notes Sharing — upload form, list view, filter by subject, delete
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/khushboo.css";
-
+import { getNotes, createNote, deleteNoteApi } from "../../services/api";
 
 function NotesPage() {
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [notes, setNotes] = useState([]);
 
-  const [notes, setNotes] = useState([
-   // { id: 1, title: "Java Notes", subject: "Java", content: "Core concepts of OOPs and Exception Handling.", date: "2026-07-07" },
-    //{ id: 2, title: "React Notes", subject: "React", content: "Understanding functional components, hooks, and states.", date: "2026-07-07" }
-  ]);
+  // Fetch notes on mount
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const response = await getNotes();
+        setNotes(response.data);
+      } catch (error) {
+        console.error("Failed to fetch notes:", error);
+      }
+    };
+    fetchNotes();
+  }, []);
 
-  const addNote = () => {
+  const addNote = async () => {
     if (title.trim() === "" || subject.trim() === "") {
       alert("Please fill all fields");
       return;
     }
-    const newNote = {
-      id: Date.now(),
-      title: title,
-      subject: subject,
-      content: "Custom uploaded peer study notes description.",
-      date: new Date().toISOString().split('T')[0]
-    };
-    setNotes([...notes, newNote]);
-    setTitle("");
-    setSubject("");
+    try {
+      const payload = {
+        title: title,
+        subject: subject,
+        description: "Custom uploaded peer study notes description."
+      };
+      const response = await createNote(payload);
+      setNotes([...notes, response.data]);
+      setTitle("");
+      setSubject("");
+    } catch (error) {
+      alert("Failed to upload note to database: " + (error.response?.data?.message || error.message));
+    }
   };
 
-  const deleteNote = (id) => {
-    setNotes(notes.filter((note) => note.id !== id));
+  const deleteNote = async (id) => {
+    try {
+      await deleteNoteApi(id);
+      setNotes(notes.filter((note) => note._id !== id && note.id !== id));
+    } catch (error) {
+      alert("Failed to delete note from database: " + (error.response?.data?.message || error.message));
+    }
   };
 
   const filteredNotes = notes.filter(note => 
-    note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    note.subject.toLowerCase().includes(searchQuery.toLowerCase())
+    note.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    note.subject?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -121,14 +138,14 @@ function NotesPage() {
           ) : (
             <div className="notes-grid">
               {filteredNotes.map((note) => (
-                <article key={note.id} className="note-card">
+                <article key={note._id || note.id} className="note-card">
                   <div>
                     <div className="note-card__meta">
                       <span className="note-card__subject-tag">{note.subject}</span>
-                      <span className="note-card__date">{note.date}</span>
+                      <span className="note-card__date">{note.date || new Date().toISOString().split('T')[0]}</span>
                     </div>
                     <h4 className="note-card__title">{note.title}</h4>
-                    <p className="note-card__content">{note.content}</p>
+                    <p className="note-card__content">{note.description || note.content || "Custom uploaded peer study notes description."}</p>
                   </div>
                   
                   <div className="note-card__actions">
@@ -140,7 +157,7 @@ function NotesPage() {
                       📥 DOWNLOAD
                     </a>
                     <button 
-                      onClick={() => deleteNote(note.id)} 
+                      onClick={() => deleteNote(note._id || note.id)} 
                       className="btn-delete"
                     >
                       DELETE
