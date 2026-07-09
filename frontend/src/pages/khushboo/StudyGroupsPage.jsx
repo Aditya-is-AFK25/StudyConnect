@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/khushboo.css";
 
+const API_URL = "http://localhost:5000/api";
 
 function StudyGroupsPage() {
   // Input fields for form submission
@@ -23,7 +24,7 @@ function StudyGroupsPage() {
       try {
         setIsLoading(true);
         // Replace with your real API endpoint string e.g., "/api/groups"
-        const response = await fetch("YOUR_BACKEND_API_URL/groups");
+        const response = await fetch(`${API_URL}/groups`);
         if (!response.ok) throw new Error("Server error fetching groups");
         
         const data = await response.json();
@@ -53,7 +54,7 @@ function StudyGroupsPage() {
     };
 
     try {
-      const response = await fetch("YOUR_BACKEND_API_URL/groups", {
+      const response = await fetch(`${API_URL}/groups`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -81,7 +82,7 @@ function StudyGroupsPage() {
     const actionEndpoint = isCurrentlyJoined ? "leave" : "join";
 
     try {
-      const response = await fetch(`YOUR_BACKEND_API_URL/groups/${groupId}/${actionEndpoint}`, {
+      const response = await fetch(`${API_URL}/groups/${groupId}/${actionEndpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" }
       });
@@ -107,7 +108,7 @@ function StudyGroupsPage() {
   // 4. GET: Query specific user array mapping for targeted display
   const handleViewMembers = async (group) => {
     try {
-      const response = await fetch(`YOUR_BACKEND_API_URL/groups/${group.id}/members`);
+      const response = await fetch(`${API_URL}/groups/${group.id}/members`);
       if (!response.ok) throw new Error("Roster fetch breakdown");
 
       const membersList = await response.json(); // Expecting array string parsing: ["User A", "User B"]

@@ -5,8 +5,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom"; 
 import "../../styles/khushboo.css";
 
-
-
 function NotFoundPage() {
   const navigate = useNavigate();
 
@@ -21,20 +19,20 @@ function NotFoundPage() {
         
         {/* Premium Serif Heading */}
         <h1 className="not-found-title">
-          PAGE NOT FOUND
+          Class Dismissed... Early?
         </h1>
         
-        {/* Clean Copy Text */}
-        <p className="not-found-message">
-          The resources or route you are trying to reach does not exist, or has been permanently shifted across academic directories.
+        {/* Witty Study-themed Copy */}
+        <p className="not-found-text">
+          We checked the syllabus, searched the library stacks, and even asked the smart kid in the front row, but this page seems to have dropped out this semester.
         </p>
 
         {/* Neubrutalist Design Navigation Button */}
         <button 
           onClick={() => navigate("/")} // Safety fallback directly to main portal route
-          className="btn-not-found"
+          className="btn-back-home"
         >
-          ← Return to Portal
+          ← Back to Study Hall
         </button>
         
       </div>
