@@ -16,11 +16,11 @@ function HomePage() {
             <span className="underline">courses</span>.
           </h1>
           <p className="hero-subtitle">
-            Select your course sections, find compatible study partners, share resources, and keep each other accountable throughout the semester.
+            Select your course sections, find compatible classmates, share resources, and keep each other accountable throughout the semester.
           </p>
           <div className="hero-actions">
             <a href="#register" className="hero-cta">
-              Find a partner <span className="arrow">→</span>
+              Find Classmates <span className="arrow">→</span>
             </a>
             <span className="hero-meta">Quick setup · Free for students</span>
           </div>
@@ -172,7 +172,7 @@ function HomePage() {
         <div className="cta-box">
           <div className="cta-stamp">✦ JOIN YOUR CLASSMATES ✦</div>
           <h2 className="cta-title">
-            Find your <em>study partner</em> today.
+            Find your <em>study group</em> today.
           </h2>
           <p className="cta-subtitle">
             Sign up in minutes with your student email and connect with classmates in your courses.

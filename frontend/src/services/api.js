@@ -25,10 +25,10 @@ export const registerUser  = (data) => api.post("/auth/register", data);
 export const loginUser     = (data) => api.post("/auth/login", data);
 
 // ─── PROFILE ─────────────────────────────────────────────
-export const getProfile    = ()     => api.get("/users/profile");
-export const updateProfile = (data) => api.put("/users/profile", data);
+export const getProfile    = ()     => api.get("/auth/profile");
+export const updateProfile = (data) => api.put("/auth/profile", data);
 
 // ─── MATCHING ────────────────────────────────────────────
-export const getMatches    = ()     => api.get("/matches");
+export const getMatches    = ()     => api.get("/match/matches");
 
 export default api;
