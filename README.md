@@ -29,6 +29,7 @@ Whether you're cramming for finals or looking for a long-term study buddy, Study
 
 ### Progress Checklist:
 *   [x] Initial Frontend & Backend Scaffolding
+*   [x] Shared Backend Config & Middleware (`shared/`)
 *   [x] API Service Layer Integration (`services/api.js`)
 *   **Aditya's Tasks (Frontend):**
     *   [x] Landing / Home Page
