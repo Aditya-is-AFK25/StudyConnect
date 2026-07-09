@@ -1,13 +1,131 @@
 // StudySessionsPage.jsx — Khushboo
 // Task: Study Sessions — create session, list sessions, join session
 
-import React from "react";
+import React, { useState } from "react";
+import "../../styles/khushboo.css";
+
 
 function StudySessionsPage() {
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [location, setLocation] = useState("");
+  const [goal, setGoal] = useState("");
+
+  // Starting with no dummy data as requested
+  const [sessions, setSessions] = useState([]);
+
+  const handleCreateSession = (e) => {
+    e.preventDefault();
+    if (!date || !time || !location || !goal) {
+      alert("Please supply all metrics for scheduling.");
+      return;
+    }
+    const newSession = {
+      id: Date.now(),
+      date,
+      time,
+      location,
+      goal,
+      status: "attending"
+    };
+    setSessions([newSession, ...sessions]);
+    setDate("");
+    setTime("");
+    setLocation("");
+    setGoal("");
+  };
+
+  const updateStatus = (id, newStatus) => {
+    setSessions(sessions.map(s => s.id === id ? { ...s, status: newStatus } : s));
+  };
+
   return (
-    <div>
-      <h1>Study Sessions</h1>
-      {/* TODO: Create session, list sessions, join session */}
+    <div className="study-sessions-container">
+      {/* Header */}
+      <div className="sessions-header">
+        <span className="sync-tag">⏱️ CALENDAR SYNC</span>
+        <h1 className="main-title">Study Sessions</h1>
+        <p className="subtitle">
+          Lock in event parameters, state targets, and handle swift RSVPs for synchronous peer reviews.
+        </p>
+      </div>
+
+      <div className="sessions-grid">
+        {/* Form */}
+        <div className="form-card">
+          <h3 className="form-title">📅 Schedule Session</h3>
+          <form onSubmit={handleCreateSession} className="session-form">
+            <div className="form-row">
+              <div className="form-group">
+                <label>DATE</label>
+                <input type="date" value={date} onChange={e => setDate(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label>TIME</label>
+                <input type="time" value={time} onChange={e => setTime(e.target.value)} />
+              </div>
+            </div>
+            <div className="form-group">
+              <label>LOCATION / LINK</label>
+              <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Room 402 or Digital Hub URL" />
+            </div>
+            <div className="form-group">
+              <label>STUDY GOAL</label>
+              <input type="text" value={goal} onChange={e => setGoal(e.target.value)} placeholder="Review Module 2 concepts..." />
+            </div>
+            <button type="submit" className="submit-btn">
+              🗓️ Deploy Session
+            </button>
+          </form>
+        </div>
+
+        {/* Sessions Render */}
+        <div className="slots-column">
+          <h3 className="slots-title">Upcoming Slots</h3>
+
+          {sessions.length === 0 ? (
+            <p className="empty-state">No sessions deployed yet. Fill out the form to schedule one!</p>
+          ) : (
+            sessions.map(session => (
+              <div key={session.id} className="session-card">
+                <div className="card-top">
+                  <div>
+                    <div className="meta-info">
+                      <span>📅 {session.date}</span>
+                      <span>⏰ {session.time}</span>
+                      <span className="meta-location">📍 {session.location}</span>
+                    </div>
+                    <h4 className="goal-title">Target: {session.goal}</h4>
+                  </div>
+
+                  {/* Badge indicator */}
+                  {session.status && (
+                    <span className={`status-badge ${session.status}`}>
+                      {session.status.toUpperCase()}
+                    </span>
+                  )}
+                </div>
+
+                <div className="rsvp-section">
+                  <span className="rsvp-label">RSVP STATUS:</span>
+                  <button 
+                    onClick={() => updateStatus(session.id, "attending")}
+                    className={`rsvp-btn ${session.status === "attending" ? "active-attending" : ""}`}
+                  >
+                    ✅ Attending
+                  </button>
+                  <button 
+                    onClick={() => updateStatus(session.id, "declined")}
+                    className={`rsvp-btn ${session.status === "declined" ? "active-declined" : ""}`}
+                  >
+                    ❌ Declined
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 }

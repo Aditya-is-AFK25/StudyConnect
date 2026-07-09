@@ -1,32 +1,23 @@
 // NotesPage.jsx — Khushboo
 // Task: Notes Sharing — upload form, list view, filter by subject, delete
+s
 
 import React, { useState } from "react";
-import NoteCard from "../../components/khushboo/NoteCard";
-import LoadingSpinner from "../../components/khushboo/LoadingSpinner";
-import ErrorMessage from "../../components/khushboo/ErrorMessage";
-import "../../styles/khushboo.css";
+imp
+
 
 function NotesPage() {
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [notes, setNotes] = useState([
-    { id: 1, title: "Java Notes", subject: "Java", content: "Core concepts of OOPs.", date: "2026-07-07" },
-    { id: 2, title: "React Notes", subject: "React", content: "Understanding components and states.", date: "2026-07-07" }
+   // { id: 1, title: "Java Notes", subject: "Java", content: "Core concepts of OOPs and Exception Handling.", date: "2026-07-07" },
+    //{ id: 2, title: "React Notes", subject: "React", content: "Understanding functional components, hooks, and states.", date: "2026-07-07" }
   ]);
 
-  // Test functions
-  const triggerLoadingTest = () => {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 3000); // 3 second baad spinner apne aap hat jayega
-  };
-
   const addNote = () => {
-    if (title === "" || subject === "") {
+    if (title.trim() === "" || subject.trim() === "") {
       alert("Please fill all fields");
       return;
     }
@@ -34,8 +25,8 @@ function NotesPage() {
       id: Date.now(),
       title: title,
       subject: subject,
-      content: "Custom uploaded note description.",
-      date: "2026-07-07"
+      content: "Custom uploaded peer study notes description.",
+      date: new Date().toISOString().split('T')[0]
     };
     setNotes([...notes, newNote]);
     setTitle("");
@@ -46,42 +37,122 @@ function NotesPage() {
     setNotes(notes.filter((note) => note.id !== id));
   };
 
-  // 1. if state of loading is true 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  // 2. if state of error is true
-  if (error) {
-    return <ErrorMessage message="Server failure! Note fetch nahi ho paya." onRetry={() => setError(false)} />;
-  }
+  const filteredNotes = notes.filter(note => 
+    note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    note.subject.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className="notes-page-container">
-      <h1>Notes Sharing</h1>
-
+    <div className="notes-page">
       
-      <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
-        <button onClick={triggerLoadingTest} style={{ backgroundColor: "#e2e8f0", padding: "8px" }}>
-          Test Loading Spinner (3s)
-        </button>
-        <button onClick={() => setError(true)} style={{ backgroundColor: "#fed7d7", padding: "8px", color: "#c53030" }}>
-          Test Error Page
-        </button>
-      </div>
+      {/* Header Section */}
+      <header className="notes-page__header">
+        <span className="notes-page__eyebrow">📚 NOTES REPOSITORY</span>
+        <h1 className="notes-page__title">Notes Sharing</h1>
+        <p className="notes-page__subtitle">
+          Upload your study notes, organize them by subject, and help your peers learn together.
+        </p>
+      </header>
 
-      <h3>Add Note</h3>
-      <input type="text" placeholder="Enter Note Title" value={title} onChange={(e) => setTitle(e.target.value)} className="form-input" style={{ marginBottom: "10px", display: "block" }} />
-      <input type="text" placeholder="Enter Subject" value={subject} onChange={(e) => setSubject(e.target.value)} className="form-input" style={{ marginBottom: "10px", display: "block" }} />
-      <button onClick={addNote} className="upload-submit-btn">Upload Note</button>
+      {/* Statistics Dashboard Section */}
+      <section className="stats-grid">
+        <div className="stat-card">
+          <h2>{notes.length}</h2>
+          <p>Total Notes</p>
+        </div>
+        <div className="stat-card">
+          <h2>{new Set(notes.map(n => n.subject.toLowerCase())).size}</h2>
+          <p>Unique Subjects</p>
+        </div>
+      </section>
 
-      <hr className="section-divider" />
+      {/* Layout Split Structure */}
+      <div className="notes-page__layout">
+        
+        {/* Left Sidebar: Upload Document Form */}
+        <aside className="upload-card">
+          <h3 className="upload-card__title">📝 Add New Note</h3>
+          <div className="upload-card__fields">
+            <div>
+              <label className="field-label">Note Title</label>
+              <input
+                type="text"
+                className="field-input"
+                placeholder="e.g. Computer Networks Basics"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
 
-      <h3>All Notes</h3>
-      <div className="notes-grid-layout">
-        {notes.map((note) => (
-          <NoteCard key={note.id} note={note} onDelete={deleteNote} />
-        ))}
+            <div>
+              <label className="field-label">Subject / Course</label>
+              <input
+                type="text"
+                className="field-input"
+                placeholder="e.g. BCA-302"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+              />
+            </div>
+
+            <button onClick={addNote} className="btn-primary">
+              ⬆️ Upload Note
+            </button>
+          </div>
+        </aside>
+
+        {/* Right Section: Search and Dynamic Feed */}
+        <main>
+          <div className="search-box">
+            <input 
+              type="text"
+              className="search-input"
+              placeholder="🔍 Search notes by title or subject..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <h3 className="notes-list__heading">
+            <li>📖 All Notes ({filteredNotes.length})</li>
+          </h3>
+
+          {filteredNotes.length === 0 ? (
+            <p className="notes-list__empty">No notes found matching your search criteria.</p>
+          ) : (
+            <div className="notes-grid">
+              {filteredNotes.map((note) => (
+                <article key={note.id} className="note-card">
+                  <div>
+                    <div className="note-card__meta">
+                      <span className="note-card__subject-tag">{note.subject}</span>
+                      <span className="note-card__date">{note.date}</span>
+                    </div>
+                    <h4 className="note-card__title">{note.title}</h4>
+                    <p className="note-card__content">{note.content}</p>
+                  </div>
+                  
+                  <div className="note-card__actions">
+                    <a 
+                      href="#" 
+                      onClick={(e) => { e.preventDefault(); alert('Downloading file...'); }} 
+                      className="btn-download"
+                    >
+                      📥 DOWNLOAD
+                    </a>
+                    <button 
+                      onClick={() => deleteNote(note.id)} 
+                      className="btn-delete"
+                    >
+                      DELETE
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </main>
+
       </div>
     </div>
   );
