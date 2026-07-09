@@ -8,9 +8,11 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,"public")));
 const PORT = process.env.PORT || 5000;
 
-const notesRoutes = require("./routes/notes/notesRoute");
+const notesRoutes = require("./routes/notesRoute");
 app.use("/notes", notesRoutes);
 app.use("/api/notes", notesRoutes);
+
+const groupRoutes = require("./routes/groupRoute")
 
 app.get("/", (req, res) => {
   res.send("StudyConnect backend is running");
