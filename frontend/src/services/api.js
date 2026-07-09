@@ -33,7 +33,9 @@ export const getMatches    = ()     => api.get("/match/matches");
 
 // ─── NOTES ───────────────────────────────────────────────
 export const getNotes      = ()     => api.get("/notes");
-export const createNote    = (data) => api.post("/notes", data);
+export const createNote    = (formData) => api.post("/notes", formData, {
+  headers: { "Content-Type": "multipart/form-data" }
+});
 export const updateNote    = (id, data) => api.put(`/notes/${id}`, data);
 export const deleteNoteApi = (id)   => api.delete(`/notes/${id}`);
 
