@@ -58,6 +58,10 @@ function Navbar({ darkMode, setDarkMode }) {
         {user ? (
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <Link to="/match" className="nav-link">Find Peers</Link>
+            <Link to="/notes" className="nav-link">Notes</Link>
+            <Link to="/groups" className="nav-link">Groups</Link>
+            <Link to="/sessions" className="nav-link">Sessions</Link>
+            <Link to="/progress" className="nav-link">Progress</Link>
             <Link 
               to="/profile/edit" 
               style={{ 
