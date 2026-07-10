@@ -15,6 +15,9 @@ app.use("/api/notes", notesRoutes);
 const groupRoutes = require("./routes/groupRoute");
 app.use("/api/groups",groupRoutes);
 
+const sessionRoutes = require("./routes/sessionRoute");
+app.use("/api/sessions", sessionRoutes);
+
 app.get("/", (req, res) => {
   res.send("StudyConnect backend is running");
 });
