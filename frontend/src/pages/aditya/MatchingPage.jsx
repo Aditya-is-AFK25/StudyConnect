@@ -1,13 +1,177 @@
-// MatchingPage.jsx — Aditya
-// Task: ⭐ Core Feature — Matching page UI
-
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getMatches } from "../../services/api";
 
 function MatchingPage() {
+  const [candidates, setCandidates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchMatches = async () => {
+      try {
+        const response = await getMatches();
+        setCandidates(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to load study recommendations. Please sign in again.");
+        setLoading(false);
+      }
+    };
+    fetchMatches();
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: "center", padding: "4rem" }}>
+        <h3>Loading your study partners...</h3>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <h1>Find Your Study Match</h1>
-      {/* TODO: Build Matching page UI here — the core feature */}
+    <div className="home-page" style={{ padding: "3rem 1.5rem", minHeight: "85vh" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        
+        {/* Title Heading */}
+        <div style={{ marginBottom: "3rem", textAlign: "center" }}>
+          <span className="profile-badge">🤝 RECOMMENDATIONS</span>
+          <h1 style={{ fontSize: "2.5rem", marginTop: "0.5rem" }}>Find Your Study Match</h1>
+          <p style={{ color: "var(--text-secondary)", maxWidth: "600px", margin: "0.5rem auto 0 auto" }}>
+            We've calculated overlap in course sections, schedules, and environment settings to find the best peer candidates for you.
+          </p>
+        </div>
+
+        {/* Global Error Banner */}
+        {error && (
+          <div style={{
+            backgroundColor: "rgba(224, 86, 86, 0.08)",
+            border: "1px solid rgba(224, 86, 86, 0.2)",
+            color: "var(--coral)",
+            padding: "1rem",
+            borderRadius: "8px",
+            textAlign: "center",
+            marginBottom: "2rem"
+          }}>
+            {error}
+          </div>
+        )}
+
+        {/* Peer Grid Cards Feed */}
+        {candidates.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "3rem" }}>
+            <p style={{ color: "var(--text-secondary)" }}>No classmate matches found yet. Try updating your profile subjects and availability!</p>
+          </div>
+        ) : (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+            gap: "2rem"
+          }}>
+            {candidates.map((peer) => (
+              <article key={peer._id} className="form-card" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                
+                {/* Peer Header */}
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
+                    <div>
+                      <h3 style={{ fontSize: "1.3rem", margin: 0 }}>{peer.name}</h3>
+                      <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)", fontFamily: "JetBrains Mono, monospace" }}>
+                        {peer.email}
+                      </span>
+                    </div>
+                    {/* Compatibility Score */}
+                    <div style={{
+                      backgroundColor: "rgba(93, 172, 161, 0.1)",
+                      color: "var(--teal)",
+                      padding: "0.35rem 0.75rem",
+                      borderRadius: "999px",
+                      fontSize: "0.85rem",
+                      fontWeight: "700",
+                      fontFamily: "JetBrains Mono, monospace"
+                    }}>
+                      ⚡ Score: {peer.score}
+                    </div>
+                  </div>
+
+                  {/* Bio */}
+                  <p style={{ color: "var(--text-secondary)", fontSize: "0.92rem", marginBottom: "1.25rem" }}>
+                    {peer.bio || "This peer hasn't added a bio yet."}
+                  </p>
+
+                  {/* Enrolled Courses */}
+                  <div style={{ marginBottom: "1rem" }}>
+                    <span className="field-label" style={{ fontSize: "0.75rem", textTransform: "uppercase" }}>Enrolled Subjects</span>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.25rem" }}>
+                      {peer.subjects?.map((sub, idx) => {
+                        const isShared = peer.sharedSubjects?.includes(sub);
+                        return (
+                          <span key={idx} style={{
+                            padding: "0.25rem 0.6rem",
+                            borderRadius: "4px",
+                            fontSize: "0.8rem",
+                            backgroundColor: isShared ? "var(--teal)" : "rgba(255,255,255,0.06)",
+                            color: isShared ? "#ffffff" : "var(--text-secondary)",
+                            fontWeight: isShared ? "600" : "400"
+                          }}>
+                            {sub} {isShared && "✓"}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Study Availability */}
+                  <div style={{ marginBottom: "1rem" }}>
+                    <span className="field-label" style={{ fontSize: "0.75rem", textTransform: "uppercase" }}>Availability Schedule</span>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.25rem" }}>
+                      {peer.availability?.map((slot, idx) => {
+                        const isShared = peer.sharedAvailability?.includes(slot);
+                        return (
+                          <span key={idx} style={{
+                            padding: "0.25rem 0.6rem",
+                            borderRadius: "4px",
+                            fontSize: "0.8rem",
+                            backgroundColor: isShared ? "rgba(93, 172, 161, 0.15)" : "rgba(255,255,255,0.04)",
+                            color: isShared ? "var(--teal)" : "var(--text-muted)",
+                            border: isShared ? "1px solid var(--teal)" : "1px solid transparent"
+                          }}>
+                            {slot}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Preferred Environment */}
+                  <div style={{ marginBottom: "1.5rem" }}>
+                    <span className="field-label" style={{ fontSize: "0.75rem", textTransform: "uppercase" }}>Preferred Environment</span>
+                    <div style={{ marginTop: "0.25rem" }}>
+                      <span style={{
+                        fontSize: "0.85rem",
+                        color: peer.environmentMatch ? "var(--teal)" : "var(--text-secondary)",
+                        fontWeight: peer.environmentMatch ? "600" : "400"
+                      }}>
+                        📍 {peer.environment || "Library"} {peer.environmentMatch && "(Shared Preferred Environment)"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Connect Action Button */}
+                <button 
+                  onClick={() => alert(`Connecting with ${peer.name.split(" ")[0]}... Invitation sent!`)}
+                  className="btn-primary" 
+                  style={{ width: "100%", padding: "0.75rem", fontSize: "0.9rem" }}
+                >
+                  ✉️ Connect With Peer
+                </button>
+
+              </article>
+            ))}
+          </div>
+        )}
+
+      </div>
     </div>
   );
 }
