@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
         } else if (req.params.subject) {
             filter.subject = req.params.subject;
         }
-        
+
         const notes = await Note.find(filter);
         res.json(notes);
     } catch (err) {
