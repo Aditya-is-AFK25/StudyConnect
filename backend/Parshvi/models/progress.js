@@ -4,14 +4,25 @@ const progressSchema = new mongoose.Schema({
 
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        required: true
     },
 
-    subject: String,
+    subject: { 
+        type: String,
+        required: true
+    },
 
-    completedTopics: Number,
+    topic: {
+        type: String,
+        required: true
+    },
 
-    totalTopics: Number
+    status: {
+        type: String,
+        enum: ["Pending","In Progress", "Completed"],
+        default: "Pending"
+    }
 
 });
 
