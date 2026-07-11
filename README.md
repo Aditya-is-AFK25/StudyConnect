@@ -56,14 +56,6 @@ Whether you're cramming for finals or looking for a long-term study buddy, Study
 
 ---
 
-## Concept Logs (For Developers)
-
-To help team members catch up on backend patterns used in the codebase:
-- [`backend/concepts.md`](./backend/concepts.md): A baseline of all concepts covered during the formal training weeks (June 29 - July 9).
-- [`backend/newconcepts.md`](./backend/newconcepts.md): Summaries of the five necessary concepts introduced outside of training (Refs, Timestamps, Enum validations, Multer uploads, and JWT authentication). All code examples are kept clean with the comment `// to be understood` for study reference.
-
----
-
 ## Getting Started
 
 ### Prerequisites:
