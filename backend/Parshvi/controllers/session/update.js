@@ -2,7 +2,7 @@ const Session = require("../../models/session");
 
 module.exports = async (req,res) => {
     try {
-        const session = await Session.updateMany(
+        const session = await Session.findByIdAndUpdate(
             req.params.id,
             req.body,
             {

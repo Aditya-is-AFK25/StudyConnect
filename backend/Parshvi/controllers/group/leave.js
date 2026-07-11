@@ -1,27 +1,27 @@
 const Group = require("../../models/group");
 
-module.exports = async (req,res) => {
+module.exports = async (req, res) => {
     try {
         const group = await Group.findById(req.params.id);
-        if(!group){
+        if (!group) {
             return res.status(404).json({
                 message: "Group not found"
             });
         }
-        // get logged in ID from auth middleware
         const userId = req.user.id;
 
-        // prevent duplicate members
-        if (group.members.some(memberId => memberId.toString() === userId.toString())){
+        // check if member
+        const memberIndex = group.members.findIndex(memberId => memberId.toString() === userId.toString());
+        if (memberIndex === -1) {
             return res.status(400).json({
-                message: "You have already joined this group!"
+                message: "You are not a member of this group!"
             });
         }
-        group.members.push(userId);
+        group.members.splice(memberIndex, 1);
         await group.save();
 
         res.status(200).json({
-            message: "Joined successfully",
+            message: "Left group successfully",
             group
         });
     } catch (err) {

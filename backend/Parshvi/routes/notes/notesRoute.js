@@ -3,10 +3,12 @@ const router = express.Router();
 
 const notesController = require("../../controllers/notes");
 const upload = require("../../middleware/upload");
+const auth = require("../../../vignesh/middleware/auth");
 
-router.post("/", upload.single('file'), notesController.create);
+// POST requires auth so uploadedBy and groupId can be trusted
+router.post("/", auth, upload.single('file'), notesController.create);
 router.get("/", notesController.read);
-router.put("/:id", notesController.update);
-router.delete("/:id", notesController.delete);
+router.put("/:id", auth, notesController.update);
+router.delete("/:id", auth, notesController.delete);
 
-module.exports = router;
+module.exports = router;

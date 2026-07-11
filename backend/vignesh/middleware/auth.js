@@ -9,8 +9,12 @@ const protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, 'studyconnectsecret');
-    req.user = await User.findById(decoded.id).select('-password');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (user) {
+      user.password = undefined;
+      req.user = user;
+    }
     next();
   } catch (error) {
     res.status(401).json({ message: 'Invalid token' });
@@ -18,3 +22,4 @@ const protect = async (req, res, next) => {
 };
 
 module.exports = protect;
+

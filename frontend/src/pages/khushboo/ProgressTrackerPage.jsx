@@ -2,6 +2,7 @@
 // Task: Progress Tracker — subject list with % update UI
 
 import React, { useState, useEffect } from "react";
+import { getProgress, updateProgress } from "../../services/api";
 import "../../styles/khushboo.css";
 
 
@@ -12,18 +13,30 @@ function ProgressTrackerPage() {
 
   // Yeh function tab chalega jab aap baad me backend API integrate karengi
   useEffect(() => {
-    // const fetchTasks = async () => {
-    //   setLoading(true);
-    //   const response = await fetch('/api/progress');
-    //   const data = await response.json();
-    //   setTasks(data);
-    //   setLoading(false);
-    // };
-    // fetchTasks();
+    const fetchTasks = async () => {
+      try {
+        setLoading(true);
+        const response = await getProgress();
+        setTasks(response.data);
+      } catch (error) {
+        console.error("Database connection failed:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTasks();
   }, []);
 
-  const toggleTask = (id) => {
-    setTasks(tasks.map(t => t.id === id ? { ...t, done: !t.done } : t));
+  const toggleTask = async (id) => {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+    try {
+      const response = await updateProgress(id, { done: !task.done });
+      const updatedTask = response.data.progress || response.data;
+      setTasks(tasks.map(t => t.id === id ? { ...t, done: updatedTask.done } : t));
+    } catch (error) {
+      console.error("Failed to update task progress:", error);
+    }
   };
 
   // Calculations tabhi hongi jab data array me kuch hoga

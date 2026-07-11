@@ -18,7 +18,16 @@ const noteSchema = new mongoose.Schema({
     uploadedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
+    },
+
+    // Optional: tag this note to a specific study group
+    groupId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Group",
+        default: null
     }
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model("Note", noteSchema);

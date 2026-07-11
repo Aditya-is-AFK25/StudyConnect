@@ -3,11 +3,15 @@ const mongoose = require("mongoose");
 const sessionSchema = new mongoose.Schema({
     subject: {
         type: String,
-        required: true
+        default: "General"
     },
     topic: {
         type: String,
-        required: true
+        default: "Study Session"
+    },
+    location: {
+        type: String,
+        default: "Online"
     },
     date: {
         type: Date

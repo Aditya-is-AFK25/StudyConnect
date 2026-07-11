@@ -31,12 +31,38 @@ export const updateProfile = (data) => api.put("/auth/profile", data);
 // ─── MATCHING ────────────────────────────────────────────
 export const getMatches    = ()     => api.get("/match/matches");
 
+// ─── CONNECT REQUESTS ────────────────────────────────────
+export const sendConnectRequest  = (userId)  => api.post(`/match/connect/${userId}`);
+export const getIncomingRequests = ()        => api.get("/match/requests");
+export const getSentRequests     = ()        => api.get("/match/requests/sent");
+export const acceptConnectRequest  = (id)   => api.put(`/match/requests/${id}/accept`);
+export const declineConnectRequest = (id)   => api.put(`/match/requests/${id}/decline`);
+
 // ─── NOTES ───────────────────────────────────────────────
 export const getNotes      = ()     => api.get("/notes");
+export const getNotesByGroup = (groupId) => api.get(`/notes?groupId=${groupId}`);
 export const createNote    = (formData) => api.post("/notes", formData, {
   headers: { "Content-Type": "multipart/form-data" }
 });
 export const updateNote    = (id, data) => api.put(`/notes/${id}`, data);
 export const deleteNoteApi = (id)   => api.delete(`/notes/${id}`);
+
+// ─── GROUPS ──────────────────────────────────────────────
+export const getGroups       = ()     => api.get("/groups");
+export const createGroup     = (data) => api.post("/groups", data);
+export const joinGroup       = (id)   => api.post(`/groups/${id}/join`);
+export const leaveGroup      = (id)   => api.post(`/groups/${id}/leave`);
+export const getGroupMembers = (id)   => api.get(`/groups/${id}/members`);
+export const getGroupMessages = (id)   => api.get(`/groups/${id}/messages`);
+export const postGroupMessage = (id, text) => api.post(`/groups/${id}/messages`, { text });
+
+// ─── SESSIONS ────────────────────────────────────────────
+export const getSessions     = ()     => api.get("/sessions");
+export const createSession    = (data) => api.post("/sessions", data);
+export const rsvpSession     = (id, data) => api.post(`/sessions/${id}/join`, data);
+
+// ─── PROGRESS ────────────────────────────────────────────
+export const getProgress     = ()     => api.get("/progress");
+export const updateProgress   = (id, data) => api.put(`/progress/${id}`, data);
 
 export default api;

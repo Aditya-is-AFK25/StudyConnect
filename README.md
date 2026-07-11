@@ -35,22 +35,32 @@ Whether you're cramming for finals or looking for a long-term study buddy, Study
     *   [x] Landing / Home Page
     *   [x] Navbar Navigation & Theme Toggle
     *   [x] Edit Profile Page UI & Backend API integration
-    *   [ ] Register / Login Forms & API integration
-    *   [ ] Matching Recommendation UI
+    *   [x] Register / Login Forms & API integration
+    *   [x] Matching Recommendation UI with Connection Requests
 *   **Khushboo's Tasks (Frontend):**
-    *   [x] Notes Page (in-memory document upload, filter feed, and deletion CRUD complete)
-    *   [/] Study Groups Page (UI layout complete, live server endpoints configured, backend database saving pending)
-    *   [/] Study Sessions Page (UI layout complete, in-memory scheduling and RSVP flags complete)
-    *   [/] Progress Tracker Page (UI layout and task checklist complete)
+    *   [x] Notes Page (with category filters and download links)
+    *   [x] Study Groups Page (with Discussion Forum and Group Notes integration)
+    *   [x] Study Sessions Page (with RSVP statuses and schedule posting)
+    *   [x] Progress Tracker Page (interactive progress checklist)
     *   [x] NotFound Page (complete)
 *   **Vignesh's Tasks (Backend):**
-    *   [x] Mongoose User Schema
+    *   [x] Mongoose User Schema & Auth controller logic
     *   [x] JWT Authentication & Protected Middleware
     *   [x] Auth APIs & Matching Recommendation algorithm
+    *   [x] Connection Requests controller & routes
 *   **Parshvi's Tasks (Backend):**
-    *   [x] Notes CRUD APIs & Note Model
-    *   [x] Frontend-to-Backend Notes Integration (with Khushboo's Notes page)
-    *   [ ] Groups, Sessions, and Progress APIs
+    *   [x] Notes CRUD APIs & Note Model (with Group notes support)
+    *   [x] Frontend-to-Backend Notes Integration
+    *   [x] Groups, Sessions, and Progress APIs
+    *   [x] Route optimization and cleanup
+
+---
+
+## Concept Logs (For Developers)
+
+To help team members catch up on backend patterns used in the codebase:
+- [`backend/concepts.md`](./backend/concepts.md): A baseline of all concepts covered during the formal training weeks (June 29 - July 9).
+- [`backend/newconcepts.md`](./backend/newconcepts.md): Summaries of the five necessary concepts introduced outside of training (Refs, Timestamps, Enum validations, Multer uploads, and JWT authentication). All code examples are kept clean with the comment `// to be understood` for study reference.
 
 ---
 

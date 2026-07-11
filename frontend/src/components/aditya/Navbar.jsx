@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext"; // Import useAuth to access the user context
 
 function Navbar({ darkMode, setDarkMode }) {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
@@ -171,6 +172,9 @@ function Navbar({ darkMode, setDarkMode }) {
                       onClick={() => {
                         setDropdownOpen(false);
                         logout();
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("user");
+                        navigate("/");
                       }}
                       style={{
                         padding: "0.6rem 1.25rem",

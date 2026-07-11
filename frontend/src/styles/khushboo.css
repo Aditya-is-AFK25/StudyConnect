@@ -1097,3 +1097,95 @@
   background: var(--ink);
   color: var(--cream);
 }
+
+/* ---------------------------------------------
+   7. GROUP DISCUSSION FORUM SYSTEM
+   --------------------------------------------- */
+.view-forum-btn {
+  background: transparent;
+  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--gold);
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 0.75rem;
+}
+
+.forum-modal {
+  max-width: 600px !important;
+  max-height: 85vh;
+}
+
+.forum-messages-container {
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+  overflow-y: auto;
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  background: var(--cream);
+  padding: 1rem;
+}
+
+.forum-messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.forum-message-bubble {
+  background: var(--card-bg);
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  box-shadow: 2px 2px 0 var(--ink);
+  max-width: 90%;
+  align-self: flex-start;
+}
+
+.forum-message-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px dashed rgba(35, 40, 31, 0.15);
+  padding-bottom: 0.2rem;
+}
+
+.forum-message-user {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--forest);
+}
+
+.forum-message-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--ink);
+  opacity: 0.6;
+}
+
+.forum-message-text {
+  font-size: 0.85rem;
+  color: var(--ink);
+  line-height: 1.4;
+  margin-top: 0.25rem;
+}
+
+.forum-input-form {
+  display: flex;
+  gap: 0.75rem;
+  border-top: 1px dashed rgba(35,40,31,0.2);
+  padding-top: 1.25rem;
+}
+
+.forum-input-field {
+  flex: 1;
+}
+
+.forum-send-btn {
+  width: 90px !important;
+}

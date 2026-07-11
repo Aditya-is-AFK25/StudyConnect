@@ -2,6 +2,7 @@
 // Task: Auth context + protected routing setup
 
 import React, { createContext, useContext, useState } from "react";
+import { Navigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -33,8 +34,7 @@ export function ProtectedRoute({ children }) {
   const { user } = useAuth();
 
   if (!user) {
-    // TODO: redirect to login when React Router is connected
-    return <p>You must be logged in to view this page.</p>;
+    return <Navigate to="/login" replace />;
   }
 
   return children;

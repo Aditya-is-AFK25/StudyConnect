@@ -2,7 +2,7 @@ const Group = require("../../models/group");
 
 module.exports = async (req,res) => {
     try {
-        const group = await Group.update(
+        const group = await Group.findByIdAndUpdate(
             req.params.id, // find by id
             req.body,
             {

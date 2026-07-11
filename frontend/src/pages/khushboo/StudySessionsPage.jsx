@@ -1,7 +1,8 @@
 // StudySessionsPage.jsx — Khushboo
 // Task: Study Sessions — create session, list sessions, join session
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getSessions, createSession as apiCreateSession, rsvpSession } from "../../services/api";
 import "../../styles/khushboo.css";
 
 
@@ -13,30 +14,70 @@ function StudySessionsPage() {
 
   // Starting with no dummy data as requested
   const [sessions, setSessions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleCreateSession = (e) => {
+  // 1. Fetch sessions on mount
+  useEffect(() => {
+    const fetchSessions = async () => {
+      try {
+        setIsLoading(true);
+        const response = await getSessions();
+        setSessions(response.data);
+      } catch (error) {
+        console.error("Failed to fetch sessions:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchSessions();
+  }, []);
+
+  const handleCreateSession = async (e) => {
     e.preventDefault();
     if (!date || !time || !location || !goal) {
       alert("Please supply all metrics for scheduling.");
       return;
     }
-    const newSession = {
-      id: Date.now(),
+    
+    const payload = {
       date,
       time,
       location,
-      goal,
-      status: "attending"
+      goal
     };
-    setSessions([newSession, ...sessions]);
-    setDate("");
-    setTime("");
-    setLocation("");
-    setGoal("");
+
+    try {
+      const response = await apiCreateSession(payload);
+      
+      // Format the newly created session to match frontend format
+      const created = response.data.session || response.data;
+      const newSession = {
+        id: created._id || created.id,
+        _id: created._id || created.id,
+        date: created.date ? new Date(created.date).toISOString().split('T')[0] : date,
+        time: created.time || time,
+        location: created.location || location,
+        goal: created.topic || goal,
+        status: "attending"
+      };
+
+      setSessions([newSession, ...sessions]);
+      setDate("");
+      setTime("");
+      setLocation("");
+      setGoal("");
+    } catch (error) {
+      alert(error.response?.data?.message || error.message);
+    }
   };
 
-  const updateStatus = (id, newStatus) => {
-    setSessions(sessions.map(s => s.id === id ? { ...s, status: newStatus } : s));
+  const updateStatus = async (id, newStatus) => {
+    try {
+      await rsvpSession(id, { status: newStatus });
+      setSessions(sessions.map(s => s.id === id ? { ...s, status: newStatus } : s));
+    } catch (error) {
+      alert(error.response?.data?.message || error.message);
+    }
   };
 
   return (

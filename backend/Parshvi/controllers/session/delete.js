@@ -2,7 +2,7 @@ const Session = require("../../models/session");
 
 module.exports = async (req, res) => {
     try {
-        const session = await Session.delete(req.params.id);
+        const session = await Session.findByIdAndDelete(req.params.id);
 
         if (!session) {
             return res.status(404).json({

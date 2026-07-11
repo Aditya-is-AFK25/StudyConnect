@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/aditya.css";
 import { getProfile, updateProfile } from "../../services/api";
+import LoadingSpinner from "../../components/khushboo/LoadingSpinner";
 
 function EditProfilePage() {
   // 1. STATE MANAGEMENT
@@ -128,13 +129,7 @@ function EditProfilePage() {
 
   // Render a loading state if data is still fetching on load
   if (loading) {
-    return (
-      <div style={{ padding: "8rem 5%", textAlign: "center", fontFamily: "inherit" }}>
-        <h2 style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", color: "var(--forest)" }}>
-          Loading your peer profile details...
-        </h2>
-      </div>
-    );
+    return <LoadingSpinner message="Loading your peer profile details..." />;
   }
 
   return (
