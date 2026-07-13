@@ -1,12 +1,5 @@
 // NotesPage.jsx — Khushboo
 // Task: Notes Sharing — upload form, list view, filter by subject, delete
-<<<<<<< HEAD
-=======
-s
-
-import React, { useState } from "react";
-import "../../styles/khushboo.css";
->>>>>>> 80f3ccb (main)
 
 import React, { useState, useEffect } from "react";
 import "../../styles/khushboo.css";
