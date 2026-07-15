@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { getProgress, updateProgress } from "../../services/api";
 import "../../styles/khushboo.css";
+import ProgressBar from "../../components/khushboo/ProgressBar";
 
 
 function ProgressTrackerPage() {
@@ -67,12 +68,7 @@ function ProgressTrackerPage() {
             <span className="progress-card__percentage">{percentage}%</span>
           </div>
 
-          <div className="progress-bar-track">
-            <div 
-              className="progress-bar-fill" 
-              style={{ width: `${percentage}%` }}
-            ></div>
-          </div>
+          <ProgressBar percentage={percentage} />
           
           <p className="progress-card__summary">
             {completedCount} OF {tasks.length} SYLLABUS GATEWAYS COMPLETED

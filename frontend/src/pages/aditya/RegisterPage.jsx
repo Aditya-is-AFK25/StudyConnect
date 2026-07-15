@@ -70,10 +70,16 @@ function RegisterPage() {
       navigate("/login"); // Redirect to login page upon successful account creation
     } catch (error) {
       setLoading(false);
-      setErrorMessage(
-        error.response?.data?.message ||
-          "Failed to register. The email address might already be registered.",
-      );
+      if (!error.response) {
+        setErrorMessage(
+          "Unable to connect to the backend server. Please verify that the backend is running on port 5000."
+        );
+      } else {
+        setErrorMessage(
+          error.response.data?.message ||
+            "Failed to register. The email address might already be registered."
+        );
+      }
     }
   };
 

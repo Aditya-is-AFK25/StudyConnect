@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, ProtectedRoute } from "./context/AuthContext";
 
 // Aditya's Pages
 import HomePage from "./pages/aditya/HomePage";
@@ -33,14 +33,14 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/profile/edit" element={<EditProfilePage />} />
-            <Route path="/match" element={<MatchingPage />} />
+            <Route path="/profile/edit" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
+            <Route path="/match" element={<ProtectedRoute><MatchingPage /></ProtectedRoute>} />
 
             {/* ── KHUSHBOO'S ROUTES ── */}
-            <Route path="/notes" element={<NotesPage />} />
-            <Route path="/groups" element={<StudyGroupsPage />} />
-            <Route path="/sessions" element={<StudySessionsPage />} />
-            <Route path="/progress" element={<ProgressTrackerPage />} />
+            <Route path="/notes" element={<ProtectedRoute><NotesPage /></ProtectedRoute>} />
+            <Route path="/groups" element={<ProtectedRoute><StudyGroupsPage /></ProtectedRoute>} />
+            <Route path="/sessions" element={<ProtectedRoute><StudySessionsPage /></ProtectedRoute>} />
+            <Route path="/progress" element={<ProtectedRoute><ProgressTrackerPage /></ProtectedRoute>} />
             <Route path="*" element={<NotFoundPage />} />
 
           </Routes>

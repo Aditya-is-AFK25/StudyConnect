@@ -145,6 +145,3 @@ postman/
 ignored/
 backend/uploads/
 
-# Concept logs for developers
-backend/concepts.md
-backend/newconcepts.md

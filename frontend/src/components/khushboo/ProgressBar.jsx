@@ -1,14 +1,15 @@
 // ProgressBar.jsx — Khushboo
-// Shows subject progress %
+// Shows progress %
 
 import React from "react";
 
-function ProgressBar({ subject, percentage }) {
+function ProgressBar({ percentage }) {
   return (
-    <div>
-      <p>{subject}</p>
-      <div style={{ width: `${percentage}%` }}></div>
-      {/* TODO: Build progress bar UI here */}
+    <div className="progress-bar-track">
+      <div 
+        className="progress-bar-fill" 
+        style={{ width: `${percentage}%` }}
+      ></div>
     </div>
   );
 }

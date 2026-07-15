@@ -64,11 +64,16 @@ Whether you're cramming for finals or looking for a long-term study buddy, Study
 
 ### Installation & Run:
 1.  **Start Backend Server**:
-    ```bash
-    cd backend
-    npm install
-    npm start
-    ```
+    * Copy the `backend/.env.example` file to `backend/.env` (default values are already pre-filled for local development):
+      ```bash
+      cp backend/.env.example backend/.env
+      ```
+    * Install dependencies and start the server:
+      ```bash
+      cd backend
+      npm install
+      npm start
+      ```
 2.  **Start Frontend Dev Server**:
     ```bash
     cd frontend

@@ -18,6 +18,7 @@ import {
   createNote,
 } from "../../services/api";
 import "../../styles/khushboo.css";
+import GroupCard from "../../components/khushboo/GroupCard";
 
 function StudyGroupsPage() {
   // ── Create form fields ────────────────────────────────────────────────────
@@ -274,32 +275,13 @@ function StudyGroupsPage() {
           ) : (
             <div className="circles-stack">
               {groups.map(group => (
-                <div key={group.id} className="circle-card">
-                  <div className="circle-info-side">
-                    <div className="circle-meta">
-                      <span className="course-badge">{group.course}</span>
-                      <button onClick={() => handleViewMembers(group)} className="view-members-btn">
-                        👤 {group.members} Members (View)
-                      </button>
-                      {group.joined && (
-                        <button onClick={() => handleViewForum(group)} className="view-forum-btn">
-                          💬 Forum
-                        </button>
-                      )}
-                    </div>
-                    <h4 className="circle-name">{group.name}</h4>
-                    <p className="circle-desc">{group.desc}</p>
-                  </div>
-
-                  <div className="circle-actions-side">
-                    <button
-                      onClick={() => toggleJoin(group.id, group.joined)}
-                      className={`join-btn ${group.joined ? "joined" : "not-joined"}`}
-                    >
-                      {group.joined ? "✓ LEAVE GROUP" : "🤝 JOIN GROUP"}
-                    </button>
-                  </div>
-                </div>
+                <GroupCard
+                  key={group.id}
+                  group={group}
+                  onViewMembers={handleViewMembers}
+                  onViewForum={handleViewForum}
+                  onToggleJoin={toggleJoin}
+                />
               ))}
             </div>
           )}

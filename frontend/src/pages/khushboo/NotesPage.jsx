@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/khushboo.css";
 import { getNotes, createNote, deleteNoteApi } from "../../services/api";
+import NoteCard from "../../components/khushboo/NoteCard";
 
 function NotesPage() {
   const [title, setTitle] = useState("");
@@ -202,39 +203,11 @@ function NotesPage() {
           ) : (
             <div className="notes-grid">
               {filteredNotes.map((note) => (
-                <article key={note._id || note.id} className="note-card">
-                  <div>
-                    <div className="note-card__meta">
-                      <span className="note-card__subject-tag">{note.subject}</span>
-                      <span className="note-card__date">{note.date || new Date().toISOString().split('T')[0]}</span>
-                    </div>
-                    <h4 className="note-card__title">{note.title}</h4>
-                    <p className="note-card__content">{note.description || note.content || "Custom uploaded peer study notes description."}</p>
-                  </div>
-                  
-                  <div className="note-card__actions">
-                    {note.file ? (
-                      <a 
-                        href={`http://localhost:5000${note.file}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="btn-download"
-                      >
-                        📥 DOWNLOAD
-                      </a>
-                    ) : (
-                      <span className="btn-download" style={{ opacity: 0.5, cursor: "not-allowed" }}>
-                        NO FILE
-                      </span>
-                    )}
-                    <button 
-                      onClick={() => deleteNote(note._id || note.id)} 
-                      className="btn-delete"
-                    >
-                      DELETE
-                    </button>
-                  </div>
-                </article>
+                <NoteCard
+                  key={note._id || note.id}
+                  note={note}
+                  onDelete={deleteNote}
+                />
               ))}
             </div>
           )}

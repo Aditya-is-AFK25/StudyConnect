@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { getSessions, createSession as apiCreateSession, rsvpSession } from "../../services/api";
 import "../../styles/khushboo.css";
+import SessionCard from "../../components/khushboo/SessionCard";
 
 
 function StudySessionsPage() {
@@ -128,41 +129,11 @@ function StudySessionsPage() {
             <p className="empty-state">No sessions deployed yet. Fill out the form to schedule one!</p>
           ) : (
             sessions.map(session => (
-              <div key={session.id} className="session-card">
-                <div className="card-top">
-                  <div>
-                    <div className="meta-info">
-                      <span>📅 {session.date}</span>
-                      <span>⏰ {session.time}</span>
-                      <span className="meta-location">📍 {session.location}</span>
-                    </div>
-                    <h4 className="goal-title">Target: {session.goal}</h4>
-                  </div>
-
-                  {/* Badge indicator */}
-                  {session.status && (
-                    <span className={`status-badge ${session.status}`}>
-                      {session.status.toUpperCase()}
-                    </span>
-                  )}
-                </div>
-
-                <div className="rsvp-section">
-                  <span className="rsvp-label">RSVP STATUS:</span>
-                  <button 
-                    onClick={() => updateStatus(session.id, "attending")}
-                    className={`rsvp-btn ${session.status === "attending" ? "active-attending" : ""}`}
-                  >
-                    ✅ Attending
-                  </button>
-                  <button 
-                    onClick={() => updateStatus(session.id, "declined")}
-                    className={`rsvp-btn ${session.status === "declined" ? "active-declined" : ""}`}
-                  >
-                    ❌ Declined
-                  </button>
-                </div>
-              </div>
+              <SessionCard
+                key={session.id}
+                session={session}
+                onUpdateStatus={updateStatus}
+              />
             ))
           )}
         </div>

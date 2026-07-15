@@ -57,10 +57,16 @@ function LoginPage() {
       navigate("/"); // Redirect to home page upon successful login
     } catch (error) {
       setLoading(false);
-      setErrorMessage(
-        error.response?.data?.message ||
-          "Failed to sign in. Please verify your credentials and try again.",
-      );
+      if (!error.response) {
+        setErrorMessage(
+          "Unable to connect to the backend server. Please verify that the backend is running on port 5000."
+        );
+      } else {
+        setErrorMessage(
+          error.response.data?.message ||
+            "Failed to sign in. Please verify your credentials and try again."
+        );
+      }
     }
   };
 
