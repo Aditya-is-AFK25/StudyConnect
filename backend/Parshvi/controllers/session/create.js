@@ -1,20 +1,31 @@
 const Session = require("../../models/session");
+const createGoogleMeet = require("../../utils/createGoogleMeet");
 
-module.exports = async (req,res) => {
+module.exports = async (req, res) => {
     try {
+        const googleMeet = await createGoogleMeet(
+            req.body.subject,
+            req.body.topic,
+            req.body.date,
+            req.body.time
+        );
+
         const session = await Session.create({
-            subject: req.body.subject || "General",
-            topic: req.body.topic || req.body.goal || "Study Session",
-            location: req.body.location || "Online",
+            subject: req.body.subject,
+            topic: req.body.topic,
             date: req.body.date,
             time: req.body.time,
-            createdBy: req.user.id
+            meetingLink: googleMeet.meetingLink,
+            googleEventId: googleMeet.eventId,
+            createdBy: req.user.id,
+            participants: []
         });
 
         res.status(201).json({
-            message: "Session created successfully",
-            session 
+            message: "Session and Google Meet created successfully",
+            session
         });
+
     } catch (err) {
         res.status(500).json({
             message: err.message

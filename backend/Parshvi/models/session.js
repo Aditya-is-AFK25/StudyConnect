@@ -19,6 +19,12 @@ const sessionSchema = new mongoose.Schema({
     time: {
         type: String
     },
+    meetingLink: {
+        type: String
+    },
+    googleEventId: {
+        type: String
+    },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
