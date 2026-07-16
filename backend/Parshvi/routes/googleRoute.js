@@ -24,7 +24,7 @@ router.get("/callback", async (req, res) => {
 
         oauth2Client.setCredentials(tokens);
 
-        res.send("Google Calendar connected successfully");
+        res.redirect("http://localhost:5173/sessions");
 
     } catch (err) {
         res.status(500).json({

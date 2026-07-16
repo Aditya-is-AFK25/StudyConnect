@@ -3,5 +3,6 @@ module.exports = {
     read: require("./read"),
     update: require("./update"),
     delete: require("./delete"),
-    join: require("./join")
+    join: require("./join"),
+    readOne: require("./readOne")
 };

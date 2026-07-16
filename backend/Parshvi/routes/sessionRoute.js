@@ -10,5 +10,6 @@ router.put("/:id", auth, sessionController.update);
 router.delete("/:id", auth, sessionController.delete);
 // Single standard join/RSVP endpoint — POST /:id/join
 router.post("/:id/join", auth, sessionController.join);
+router.get("/:id",auth, sessionController.readOne);
 
-module.exports = router;
+module.exports = router;

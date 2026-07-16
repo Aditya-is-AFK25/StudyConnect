@@ -1,3 +1,4 @@
+//fetches multiple sessions 
 const Session = require("../../models/session");
 
 module.exports = async (req,res) => {
@@ -8,7 +9,9 @@ module.exports = async (req,res) => {
         } else if (req.params.subject) {
             filter.subject = req.params.subject;
         }
-        const sessions = await Session.find(filter);
+       const sessions = await Session.find(filter)
+            .populate("createdBy", "name email")
+            .populate("participants", "name email");
 
         const userId = req.user ? req.user.id : null;
         const mappedSessions = sessions.map(s => {
@@ -16,13 +19,15 @@ module.exports = async (req,res) => {
             const isAttending = userId ? participantsArray.some(p => p.toString() === userId.toString()) : false;
             return {
                 id: s._id,
-                _id: s._id,
+                createdBy: s.createdBy?.name,
+                subject: s.subject,
                 date: s.date ? new Date(s.date).toISOString().split('T')[0] : "",
                 time: s.time || "",
                 location: s.location || "Online",
                 goal: s.topic || "Study Session",
                 meetingLink: s.meetingLink,
-                status: isAttending ? "attending" : "declined"
+                status: isAttending ? "attending" : "declined",
+                participantsCount: s.participants.length,
             };
         });
 

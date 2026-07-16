@@ -2,6 +2,12 @@ const Session = require("../../models/session");
 
 module.exports = async (req, res) => {
     try {
+        //only creator can delete 
+        if (session.createdBy.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: "You are not allowed to delete this session"
+            });
+        }
         const session = await Session.findByIdAndDelete(req.params.id);
 
         if (!session) {
