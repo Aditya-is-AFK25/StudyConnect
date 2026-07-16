@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../../services/api";
 
@@ -11,6 +11,7 @@ function RegisterPage() {
   const [errors, setErrors] = useState<any>({});
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const isSubmitting = useRef(false);
   const navigate = useNavigate();
 
   // Validate all form fields
@@ -53,7 +54,9 @@ function RegisterPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
+    if (isSubmitting.current) return;
 
+    isSubmitting.current = true;
     setLoading(true);
     setErrorMessage("");
 
@@ -69,6 +72,7 @@ function RegisterPage() {
       setLoading(false);
       navigate("/login"); // Redirect to login page upon successful account creation
     } catch (error) {
+      isSubmitting.current = false;
       setLoading(false);
       if (!error.response) {
         setErrorMessage(
