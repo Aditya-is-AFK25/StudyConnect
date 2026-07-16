@@ -102,7 +102,7 @@ function StudySessionsPage() {
           </p>
         </div>
         <a 
-          href="http://localhost:5000/api/google/auth" 
+          href="http://localhost:5001/api/google/auth" 
           target="_blank" 
           rel="noopener noreferrer"
           style={{

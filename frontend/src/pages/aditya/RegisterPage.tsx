@@ -72,7 +72,7 @@ function RegisterPage() {
       setLoading(false);
       if (!error.response) {
         setErrorMessage(
-          "Unable to connect to the backend server. Please verify that the backend is running on port 5000."
+          "Unable to connect to the backend server. Please verify that the backend is running on port 5001."
         );
       } else {
         setErrorMessage(

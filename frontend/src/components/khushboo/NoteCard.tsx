@@ -20,7 +20,7 @@ function NoteCard({ note, onDelete }) {
       <div className="note-card__actions">
         {note.file ? (
           <a 
-            href={`http://localhost:5000${note.file}`} 
+            href={`http://localhost:5001${note.file}`} 
             target="_blank" 
             rel="noopener noreferrer"
             className="btn-download"
