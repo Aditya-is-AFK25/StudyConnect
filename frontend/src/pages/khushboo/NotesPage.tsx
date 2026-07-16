@@ -12,7 +12,7 @@ function NotesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [notes, setNotes] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<any>({});
 
   // Fetch notes on mount
   useEffect(() => {
@@ -28,7 +28,7 @@ function NotesPage() {
   }, []);
 
   const validateForm = () => {
-    const tempErrors = {};
+    const tempErrors: any = {};
     if (!title || title.trim().length < 3 || title.trim().length > 100) {
       tempErrors.title = "Note title must be between 3 and 100 characters.";
     }
@@ -67,7 +67,8 @@ function NotesPage() {
       setSubject("");
       setSelectedFile(null);
       setErrors({});
-      document.getElementById("note-file-input").value = "";
+      const fileInput = document.getElementById("note-file-input") as HTMLInputElement;
+      if (fileInput) fileInput.value = "";
     } catch (error) {
       alert("Failed to upload note to database: " + (error.response?.data?.message || error.message));
     }

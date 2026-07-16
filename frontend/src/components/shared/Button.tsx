@@ -4,7 +4,14 @@
 
 import React from "react";
 
-function Button({ label, onClick, type = "button", disabled = false }) {
+interface ButtonProps {
+  label: string;
+  onClick?: (e?: any) => void;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+}
+
+function Button({ label, onClick, type = "button", disabled = false }: ButtonProps) {
   return (
     <button type={type} onClick={onClick} disabled={disabled}>
       {label}

@@ -204,7 +204,8 @@ function StudyGroupsPage() {
       setNoteTitle("");
       setNoteSubject("");
       setNoteFile(null);
-      document.getElementById("group-note-file").value = "";
+      const fileInput = document.getElementById("group-note-file") as HTMLInputElement;
+      if (fileInput) fileInput.value = "";
     } catch (err) {
       alert("Upload failed: " + (err.response?.data?.message || err.message));
     } finally {
@@ -251,7 +252,7 @@ function StudyGroupsPage() {
             <div>
               <label className="form-label">DESCRIPTION</label>
               <textarea
-                rows="3"
+                rows={3}
                 value={description}
                 onChange={e => setDescription(e.target.value)}
                 placeholder="What is this circle focusing on?"

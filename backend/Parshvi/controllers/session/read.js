@@ -21,6 +21,7 @@ module.exports = async (req,res) => {
                 time: s.time || "",
                 location: s.location || "Online",
                 goal: s.topic || "Study Session",
+                meetingLink: s.meetingLink,
                 status: isAttending ? "attending" : "declined"
             };
         });

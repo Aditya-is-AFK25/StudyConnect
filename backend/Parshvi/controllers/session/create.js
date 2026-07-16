@@ -13,6 +13,7 @@ module.exports = async (req, res) => {
         const session = await Session.create({
             subject: req.body.subject,
             topic: req.body.topic,
+            location: req.body.location,
             date: req.body.date,
             time: req.body.time,
             meetingLink: googleMeet.meetingLink,

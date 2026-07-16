@@ -4,9 +4,9 @@
 import React, { createContext, useContext, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-const AuthContext = createContext();
+const AuthContext = createContext<any>(null);
 
-export function AuthProvider({ children }) {
+export function AuthProvider({ children }: any) {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user");
     try {
@@ -39,7 +39,7 @@ export function useAuth() {
 }
 
 // Protected Route component
-export function ProtectedRoute({ children }) {
+export function ProtectedRoute({ children }: any) {
   const { user } = useAuth();
 
   if (!user) {

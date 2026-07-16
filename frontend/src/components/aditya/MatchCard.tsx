@@ -1,4 +1,3 @@
-// MatchCard.jsx — Aditya
 // Task: Card UI for displaying a study match
 
 import React from "react";

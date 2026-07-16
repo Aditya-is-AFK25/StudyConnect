@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext"; // 1. Import useAuth hook
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<any>({});
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ function LoginPage() {
 
   // Validate email format and check password presence
   const validateForm = () => {
-    const tempErrors = {};
+    const tempErrors: any = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!email) {

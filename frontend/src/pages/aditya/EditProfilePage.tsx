@@ -299,7 +299,7 @@ function EditProfilePage() {
           <textarea
             id="bioInput"
             className="textarea-input"
-            rows="3"
+            rows={3}
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             placeholder="Tell classmates a bit about yourself..."
