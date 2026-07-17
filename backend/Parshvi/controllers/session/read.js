@@ -15,7 +15,7 @@ module.exports = async (req,res) => {
 
         const userId = req.user ? req.user.id : null;
         const mappedSessions = sessions.map(s => {
-            const participantsArray = s.participants || [];
+            const participantsArray = Array.isArray(s.participants) ? s.participants : [];
             const isAttending = userId ? participantsArray.some(p => p.toString() === userId.toString()) : false;
             return {
                 id: s._id,
@@ -27,7 +27,7 @@ module.exports = async (req,res) => {
                 goal: s.topic || "Study Session",
                 meetingLink: s.meetingLink,
                 status: isAttending ? "attending" : "declined",
-                participantsCount: s.participants.length,
+                participantsCount: participantsArray.length,
             };
         });
 

@@ -3,19 +3,28 @@ const createGoogleMeet = require("../../utils/createGoogleMeet");
 
 module.exports = async (req, res) => {
     try {
+
+        const { subject, topic, location, date, time } = req.body;
+
+        if (!subject || !topic || !date || !time) {
+            return res.status(400).json({
+                message: "Please fill all required fields."
+            });
+        }
+
         const googleMeet = await createGoogleMeet(
-            req.body.subject,
-            req.body.topic,
-            req.body.date,
-            req.body.time
+            subject,
+            topic,
+            date,
+            time
         );
 
         const session = await Session.create({
-            subject: req.body.subject,
-            topic: req.body.topic,
-            location: req.body.location,
-            date: req.body.date,
-            time: req.body.time,
+            subject,
+            topic,
+            location,
+            date,
+            time,
             meetingLink: googleMeet.meetingLink,
             googleEventId: googleMeet.eventId,
             createdBy: req.user.id,
