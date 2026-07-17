@@ -24,7 +24,7 @@ router.get("/callback", async (req, res) => {
 
         oauth2Client.setCredentials(tokens);
 
-        res.redirect("http://localhost:5173/sessions");
+        res.redirect("https://meet.google.com");
 
     } catch (err) {
         res.status(500).json({
