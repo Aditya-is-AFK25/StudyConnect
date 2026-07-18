@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const sessionSchema = new mongoose.Schema({
+    group: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "StudyGroup",
+        required: true
+    },
     subject: {
         type: String,
         default: "General"
@@ -37,10 +42,13 @@ const sessionSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
-    participants: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    }]
+    participants: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }],
+        default: []
+    }
 });
 
 module.exports = mongoose.model("Session", sessionSchema);
