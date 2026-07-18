@@ -1,8 +1,21 @@
 const Session = require("../../models/session");
+const Group = require("../../models/group");
 const createGoogleMeet = require("../../utils/createGoogleMeet");
 
 module.exports = async (req, res) => {
     try {
+        // Group sessions can only be scheduled by the user who created the
+        // group. This check is intentionally on the server, not only in UI.
+        if (req.body.groupId) {
+            const group = await Group.findById(req.body.groupId);
+            if (!group) {
+                return res.status(404).json({ message: "Study group not found" });
+            }
+            if (!group.createdBy || group.createdBy.toString() !== req.user.id.toString()) {
+                return res.status(403).json({ message: "Only the group admin can create a session" });
+            }
+        }
+
         const googleMeet = await createGoogleMeet(
             req.body.subject,
             req.body.topic,
@@ -18,6 +31,7 @@ module.exports = async (req, res) => {
             time: req.body.time,
             meetingLink: googleMeet.meetingLink,
             googleEventId: googleMeet.eventId,
+            groupId: req.body.groupId || null,
             createdBy: req.user.id,
             participants: []
         });

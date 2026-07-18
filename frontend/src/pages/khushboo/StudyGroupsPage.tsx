@@ -6,6 +6,8 @@
 //   #5  — createGroup payload now sends { groupName, subject, description }
 
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import {
   getGroups,
   createGroup as apiCreateGroup,
@@ -21,6 +23,7 @@ import "../../styles/khushboo.css";
 import GroupCard from "../../components/khushboo/GroupCard";
 
 function StudyGroupsPage() {
+  const { user } = useAuth();
   // ── Create form fields ────────────────────────────────────────────────────
   const [groupName, setGroupName]     = useState("");
   const [courseCode, setCourseCode]   = useState("");
@@ -49,6 +52,7 @@ function StudyGroupsPage() {
   const [noteSubject, setNoteSubject] = useState("");
   const [noteFile, setNoteFile]       = useState(null);
   const [noteUploading, setNoteUploading] = useState(false);
+
 
   // ── 1. Fetch all groups from DB on mount ──────────────────────────────────
   useEffect(() => {
@@ -138,6 +142,10 @@ function StudyGroupsPage() {
       setIsForumLoading(false);
     }
   };
+
+  const isForumAdmin = Boolean(
+    activeForumGroup && activeForumGroup.createdById === (user?._id || user?.id)
+  );
 
   // ── 6. Manual refresh for messages (no auto-poll — Item 3) ───────────────
   const handleRefreshMessages = async () => {
@@ -307,7 +315,7 @@ function StudyGroupsPage() {
                   key={index}
                   className={`member-item ${member.isCurrentUser ? "current-user" : "other-user"}`}
                 >
-                  {index + 1}. {member.name || member}
+                  {index + 1}. {member.name || member}{member.isAdmin ? " (Admin)" : ""}
                 </li>
               ))}
             </ul>
@@ -377,6 +385,9 @@ function StudyGroupsPage() {
               >
                 📚 Group Notes
               </button>
+              <Link to={`/sessions?groupId=${activeForumGroup.id}`} className="open-sessions-tab-btn" style={{ marginLeft: "auto" }}>
+                {isForumAdmin ? "Create Session" : "Open Study Sessions"}
+              </Link>
             </div>
 
             {/* ── MESSAGES TAB ── */}

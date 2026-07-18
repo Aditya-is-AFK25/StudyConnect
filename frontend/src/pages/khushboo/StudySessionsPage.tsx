@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { getSessions, createSession as apiCreateSession, rsvpSession } from "../../services/api";
+import { useSearchParams } from "react-router-dom";
+import { getSessions, getGroups, createSession as apiCreateSession, rsvpSession } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
 import "../../styles/khushboo.css";
 import SessionCard from "../../components/khushboo/SessionCard";
 
@@ -15,6 +17,9 @@ interface SessionType {
 }
 
 function StudySessionsPage() {
+  const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const groupId = searchParams.get("groupId");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [subject, setSubject] = useState("");
@@ -23,14 +28,22 @@ function StudySessionsPage() {
 
   const [sessions, setSessions] = useState<SessionType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGroupAdmin, setIsGroupAdmin] = useState(false);
+  const [groupName, setGroupName] = useState("");
 
   // Fetch sessions on mount
   useEffect(() => {
     const fetchSessions = async () => {
       try {
         setIsLoading(true);
-        const response = await getSessions();
+        const response = await getSessions(groupId ? { groupId } : undefined);
         setSessions(response.data);
+        if (groupId) {
+          const groupsResponse = await getGroups();
+          const group = groupsResponse.data.find((item) => item.id === groupId);
+          setGroupName(group?.name || "this group");
+          setIsGroupAdmin(Boolean(group && group.createdById === (user?._id || user?.id)));
+        }
       } catch (error) {
         console.error("Failed to fetch sessions:", error);
       } finally {
@@ -38,7 +51,7 @@ function StudySessionsPage() {
       }
     };
     fetchSessions();
-  }, []);
+  }, [groupId, user]);
 
   const handleCreateSession = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +65,8 @@ function StudySessionsPage() {
       time,
       subject,
       topic,
-      location: location || "Google Meet"
+      location: location || "Google Meet",
+      groupId: groupId || undefined,
     };
 
     try {
@@ -127,6 +141,7 @@ function StudySessionsPage() {
 
       <div className="sessions-grid">
         {/* Form */}
+        {isGroupAdmin ? (
         <div className="form-card">
           <h3 className="form-title">📅 Schedule Session</h3>
           <form onSubmit={handleCreateSession} className="session-form">
@@ -157,6 +172,12 @@ function StudySessionsPage() {
             </button>
           </form>
         </div>
+        ) : (
+          <div className="form-card" style={{ alignSelf: "start" }}>
+            <h3 className="form-title">Study Sessions</h3>
+            <p className="empty-state">Only the group admin can create a session. You can view and join scheduled sessions below.</p>
+          </div>
+        )}
 
         {/* Sessions Render */}
         <div className="slots-column">

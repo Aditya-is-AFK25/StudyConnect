@@ -20,6 +20,7 @@ module.exports = async(req,res) => {
                 name: g.groupName,
                 course: g.subject,
                 desc: g.description,
+                createdById: g.createdBy ? g.createdBy.toString() : null,
                 members: membersArray.length,
                 joined: userId ? membersArray.some(m => m.toString() === userId.toString()) : false
             };

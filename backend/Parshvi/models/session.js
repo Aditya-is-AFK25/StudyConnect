@@ -25,6 +25,13 @@ const sessionSchema = new mongoose.Schema({
     googleEventId: {
         type: String
     },
+    // A session belongs to one study group. This lets the chat show only its
+    // own announcements and lets us verify the group's admin on creation.
+    groupId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Group",
+        required: false
+    },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

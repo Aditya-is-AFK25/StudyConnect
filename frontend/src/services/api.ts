@@ -59,7 +59,7 @@ export const getGroupMessages = (id)   => api.get(`/groups/${id}/messages`);
 export const postGroupMessage = (id, text) => api.post(`/groups/${id}/messages`, { text });
 
 // ─── SESSIONS ────────────────────────────────────────────
-export const getSessions     = ()     => api.get("/sessions");
+export const getSessions     = (params?: { groupId?: string }) => api.get("/sessions", { params });
 export const createSession    = (data) => api.post("/sessions", data);
 export const rsvpSession     = (id, data) => api.post(`/sessions/${id}/join`, data);
 

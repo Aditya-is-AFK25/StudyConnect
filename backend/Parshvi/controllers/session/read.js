@@ -4,6 +4,9 @@ const Session = require("../../models/session");
 module.exports = async (req,res) => {
     try {
         const filter = {};
+        if (req.query.groupId) {
+            filter.groupId = req.query.groupId;
+        }
         if (req.query.subject) {
             filter.subject = req.query.subject;
         } else if (req.params.subject) {
@@ -19,6 +22,7 @@ module.exports = async (req,res) => {
             const isAttending = userId ? participantsArray.some(p => p.toString() === userId.toString()) : false;
             return {
                 id: s._id,
+                groupId: s.groupId ? s.groupId.toString() : null,
                 createdBy: s.createdBy?.name,
                 subject: s.subject,
                 date: s.date ? new Date(s.date).toISOString().split('T')[0] : "",

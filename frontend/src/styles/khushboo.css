@@ -1120,7 +1120,7 @@
 .forum-messages-container {
   display: flex;
   flex-direction: column;
-  height: 350px;
+  height: 510px;
   overflow-y: auto;
   border: 1.5px solid var(--ink);
   border-radius: 4px;
@@ -1188,4 +1188,22 @@
 
 .forum-send-btn {
   width: 90px !important;
+}
+
+.open-sessions-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  background: var(--forest);
+  color: var(--cream);
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.open-sessions-tab-btn:hover {
+  background: var(--ink);
 }
