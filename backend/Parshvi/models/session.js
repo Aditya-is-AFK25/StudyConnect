@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const sessionSchema = new mongoose.Schema({
-    group: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "StudyGroup",
-        required: true
-    },
     subject: {
         type: String,
         default: "General"
