@@ -405,13 +405,20 @@ body {
 .feature-groups .feature-icon { background: var(--gold); color: var(--cream); }
 
 .feature-sessions {
-  background: var(--gold); color: #23281F;
+  background: var(--gold); color: var(--ink);
 }
-.feature-sessions .feature-icon { background: rgba(35,40,31,0.12); }
+.feature-sessions .feature-icon {
+  background: rgba(255,255,255,0.12);
+  color: var(--ink);
+}
 
 .feature-progress {
   grid-column: span 2;
   background: var(--coral); color: var(--cream);
+}
+
+.dark-mode .feature-card .feature-description {
+  opacity: 0.92;
 }
 
 /* ---------------------------------------------

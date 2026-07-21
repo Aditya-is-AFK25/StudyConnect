@@ -1,209 +1,152 @@
+// Navbar.tsx — Aditya
+// React Bootstrap: Navbar, Nav, NavDropdown, Container, Button
+// Concepts: useState (dropdown), conditional rendering (user logged in/out)
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext"; // Import useAuth to access the user context
+import {
+  Navbar as BSNavbar,
+  Nav,
+  NavDropdown,
+  Container,
+  Button,
+} from "react-bootstrap";
+import { useAuth } from "../../context/AuthContext";
 
-function Navbar({ darkMode, setDarkMode }) {
+function Navbar({ darkMode, setDarkMode }: { darkMode: boolean; setDarkMode: (v: boolean) => void }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
   return (
-    <nav className="navbar">
-      {/* Brand logo link */}
-      <Link 
-        to="/" 
-        className="logo-block" 
-        style={{ 
-          display: 'flex', 
-          flexDirection: 'row', 
-          alignItems: 'center', 
-          gap: '0.75rem',
-          textDecoration: 'none' 
-        }}
-      >
-        <img src="/Logo.jpeg" alt="StudyConnect Logo" style={{ height: '36px', borderRadius: '6px' }} />
-        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1' }}>
-          <span className="logo">StudyConnect</span>
-          <span className="logo-tag">Est. 2026 · Peer Study Matching</span>
-        </div>
-      </Link>
-      
-      <div className="nav-actions">
-        {/* Hide landing page details when logged in */}
-        {!user && (
-          <>
-            <a href="#how" className="nav-link">How it works</a>
-            <a href="#features" className="nav-link">Features</a>
-          </>
-        )}
-        
-        <button 
-          onClick={() => setDarkMode(!darkMode)} 
-          className="nav-button"
-          style={{ 
-            background: 'transparent',
-            color: 'var(--ink)',
-            border: '1px solid var(--ink)',
-            padding: '0.4rem 1rem',
-            cursor: 'pointer',
-            borderRadius: '999px',
-            fontFamily: 'inherit',
-            fontWeight: '500',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.4rem'
-          }}
-        >
-          {darkMode ? '☀️ Light' : '🌙 Dark'}
-        </button>
-
-        {user ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "1.25rem" }}>
-            <Link to="/match" className="nav-link">Find Peers</Link>
-            <Link to="/notes" className="nav-link">Notes</Link>
-            <Link to="/groups" className="nav-link">Groups</Link>
-            
-            {/* User Profile Dropdown Container */}
-            <div style={{ position: "relative" }}>
-              <button 
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                style={{ 
-                  display: "flex", 
-                  alignItems: "center", 
-                  gap: "0.5rem", 
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "inherit",
-                  fontFamily: "inherit",
-                  padding: 0
-                }}
-              >
-                <div style={{
-                  width: "34px",
-                  height: "34px",
-                  borderRadius: "50%",
-                  backgroundColor: "var(--forest)",
-                  color: "var(--cream)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: "700",
-                  fontSize: "0.95rem",
-                  textTransform: "uppercase"
-                }}>
-                  {user.name ? user.name[0] : "U"}
-                </div>
-                <span className="nav-link" style={{ margin: 0, fontWeight: "600", display: "inline-flex", alignItems: "center", gap: "0.25rem" }}>
-                  {user.name?.split(" ")[0]} <span style={{ fontSize: "0.7rem" }}>▼</span>
-                </span>
-              </button>
-
-              {/* Floating Dropdown Card */}
-              {dropdownOpen && (
-                <>
-                  <div 
-                    onClick={() => setDropdownOpen(false)} 
-                    style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 99 }}
-                  />
-                  <div style={{
-                    position: "absolute",
-                    top: "125%",
-                    right: 0,
-                    backgroundColor: "var(--card-bg)",
-                    border: "1px solid rgba(35,40,31,0.15)",
-                    borderRadius: "8px",
-                    padding: "0.5rem 0",
-                    minWidth: "170px",
-                    boxShadow: "0 10px 25px rgba(35,40,31,0.08)",
-                    zIndex: 100,
-                    display: "flex",
-                    flexDirection: "column"
-                  }}>
-                    <Link 
-                      to="/profile/edit" 
-                      onClick={() => setDropdownOpen(false)}
-                      style={{
-                        padding: "0.6rem 1.25rem",
-                        color: "var(--ink)",
-                        textDecoration: "none",
-                        fontSize: "0.88rem",
-                        textAlign: "left",
-                        transition: "background 0.2s"
-                      }}
-                      className="dropdown-item-hover"
-                    >
-                      👤 Edit Profile
-                    </Link>
-                    <Link 
-                      to="/sessions" 
-                      onClick={() => setDropdownOpen(false)}
-                      style={{
-                        padding: "0.6rem 1.25rem",
-                        color: "var(--ink)",
-                        textDecoration: "none",
-                        fontSize: "0.88rem",
-                        textAlign: "left",
-                        transition: "background 0.2s"
-                      }}
-                      className="dropdown-item-hover"
-                    >
-                      📅 Study Sessions
-                    </Link>
-                    <Link 
-                      to="/progress" 
-                      onClick={() => setDropdownOpen(false)}
-                      style={{
-                        padding: "0.6rem 1.25rem",
-                        color: "var(--ink)",
-                        textDecoration: "none",
-                        fontSize: "0.88rem",
-                        textAlign: "left",
-                        transition: "background 0.2s"
-                      }}
-                      className="dropdown-item-hover"
-                    >
-                      📈 Track Progress
-                    </Link>
-                    
-                    <div style={{ borderTop: "1px solid rgba(35,40,31,0.1)", margin: "0.4rem 0" }} />
-                    
-                    <button 
-                      onClick={() => {
-                        setDropdownOpen(false);
-                        logout();
-                        localStorage.removeItem("token");
-                        localStorage.removeItem("user");
-                        navigate("/");
-                      }}
-                      style={{
-                        padding: "0.6rem 1.25rem",
-                        color: "var(--coral)",
-                        background: "none",
-                        border: "none",
-                        fontSize: "0.88rem",
-                        textAlign: "left",
-                        cursor: "pointer",
-                        fontWeight: "600",
-                        width: "100%"
-                      }}
-                      className="dropdown-item-hover"
-                    >
-                      🚪 Logout
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
+    <BSNavbar
+      expand="lg"
+      sticky="top"
+      className="navbar px-3"
+      style={{
+        background: "var(--card-bg)",
+        borderBottom: "1px solid rgba(35,40,31,0.12)",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+      }}
+    >
+      <Container fluid>
+        {/* Brand / Logo */}
+        <BSNavbar.Brand as={Link} to="/" className="d-flex align-items-center gap-2">
+          <img
+            src="/Logo.jpeg"
+            alt="StudyConnect Logo"
+            style={{ height: "36px", borderRadius: "6px" }}
+          />
+          <div className="d-flex flex-column lh-1">
+            <span className="logo">StudyConnect</span>
+            <span className="logo-tag" style={{ fontSize: "0.68rem" }}>
+              Est. 2026 · Peer Study Matching
+            </span>
           </div>
-        ) : (
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <Link to="/login" className="nav-link">Login</Link>
-            <Link to="/register" className="nav-button">Register</Link>
-          </div>
-        )}
-      </div>
-    </nav>
+        </BSNavbar.Brand>
+
+        {/* Mobile Toggle */}
+        <BSNavbar.Toggle aria-controls="main-navbar" />
+
+        <BSNavbar.Collapse id="main-navbar">
+          <Nav className="ms-auto align-items-lg-center gap-2">
+
+            {/* Show landing links only when logged out */}
+            {!user && (
+              <>
+                <Nav.Link href="#how" className="nav-link">How it works</Nav.Link>
+                <Nav.Link href="#features" className="nav-link">Features</Nav.Link>
+              </>
+            )}
+
+            {/* Dark mode toggle */}
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              onClick={() => setDarkMode(!darkMode)}
+              style={{
+                borderRadius: "999px",
+                fontFamily: "inherit",
+                fontWeight: 500,
+                fontSize: "0.85rem",
+                color: "var(--ink)",
+                borderColor: "var(--ink)",
+              }}
+            >
+              {darkMode ? "☀️ Light" : "🌙 Dark"}
+            </Button>
+
+            {/* Logged-in links + user dropdown */}
+            {user ? (
+              <>
+                <Nav.Link as={Link} to="/match" className="nav-link">Find Peers</Nav.Link>
+                <Nav.Link as={Link} to="/notes" className="nav-link">Notes</Nav.Link>
+                <Nav.Link as={Link} to="/groups" className="nav-link">Groups</Nav.Link>
+
+                {/* NavDropdown for profile actions */}
+                <NavDropdown
+                  title={
+                    <span className="d-inline-flex align-items-center gap-2">
+                      <span
+                        style={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: "50%",
+                          background: "var(--forest)",
+                          color: "var(--cream)",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontWeight: 700,
+                          fontSize: "0.9rem",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {user.name ? user.name[0] : "U"}
+                      </span>
+                      <span className="nav-link" style={{ margin: 0, fontWeight: 600 }}>
+                        {user.name?.split(" ")[0]}
+                      </span>
+                    </span>
+                  }
+                  id="user-dropdown"
+                  align="end"
+                  style={{ color: "var(--ink)" }}
+                >
+                  <NavDropdown.Item as={Link} to="/profile/edit">
+                    👤 Edit Profile
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/sessions">
+                    📅 Study Sessions
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/progress">
+                    📈 Track Progress
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item
+                    onClick={handleLogout}
+                    style={{ color: "var(--coral)", fontWeight: 600 }}
+                  >
+                    🚪 Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </>
+            ) : (
+              <>
+                <Nav.Link as={Link} to="/login" className="nav-link">Login</Nav.Link>
+                <Nav.Link as={Link} to="/register" className="nav-button">Register</Nav.Link>
+              </>
+            )}
+          </Nav>
+        </BSNavbar.Collapse>
+      </Container>
+    </BSNavbar>
   );
 }
 
