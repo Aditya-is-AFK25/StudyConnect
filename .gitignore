@@ -119,6 +119,9 @@ dist
 # Firebase cache directory
 .firebase/
 
+# VS Code local workspace settings
+.vscode/
+
 # TernJS port file
 .tern-port
 
@@ -145,3 +148,4 @@ postman/
 ignored/
 backend/uploads/
 
+newconcepts_frontend.md
