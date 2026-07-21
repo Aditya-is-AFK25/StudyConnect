@@ -1,8 +1,14 @@
+// StudySessionsPage.tsx — Khushboo
+// React Bootstrap: Container, Row, Col, Card, Form, Button, Alert, Spinner, Badge
+// Concepts: useState, useEffect (fetch on mount), conditional rendering
+
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import {
+  Container, Row, Col, Card, Form, Button, Alert, Spinner, Badge,
+} from "react-bootstrap";
 import { getSessions, getGroups, createSession as apiCreateSession, rsvpSession } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
-import "../../styles/khushboo.css";
 import SessionCard from "../../components/khushboo/SessionCard";
 
 interface SessionType {
@@ -20,18 +26,20 @@ function StudySessionsPage() {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const groupId = searchParams.get("groupId");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [subject, setSubject] = useState("");
-  const [topic, setTopic] = useState("");
+
+  const [date, setDate]         = useState("");
+  const [time, setTime]         = useState("");
+  const [subject, setSubject]   = useState("");
+  const [topic, setTopic]       = useState("");
   const [location, setLocation] = useState("");
 
-  const [sessions, setSessions] = useState<SessionType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [sessions, setSessions]         = useState<SessionType[]>([]);
+  const [isLoading, setIsLoading]       = useState(true);
   const [isGroupAdmin, setIsGroupAdmin] = useState(false);
-  const [groupName, setGroupName] = useState("");
+  const [groupName, setGroupName]       = useState("");
+  const [formError, setFormError]       = useState("");
 
-  // Fetch sessions on mount
+  // useEffect — fetch sessions on mount (UseEffectExample1 pattern)
   useEffect(() => {
     const fetchSessions = async () => {
       try {
@@ -40,7 +48,7 @@ function StudySessionsPage() {
         setSessions(response.data);
         if (groupId) {
           const groupsResponse = await getGroups();
-          const group = groupsResponse.data.find((item) => item.id === groupId);
+          const group = groupsResponse.data.find((item: any) => item.id === groupId);
           setGroupName(group?.name || "this group");
           setIsGroupAdmin(Boolean(group && group.createdById === (user?._id || user?.id)));
         }
@@ -56,49 +64,41 @@ function StudySessionsPage() {
   const handleCreateSession = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!date || !time || !subject || !topic) {
-      alert("Please supply all metrics (Date, Time, Subject, and Topic) for scheduling.");
+      setFormError("Please supply all metrics (Date, Time, Subject, and Topic) for scheduling.");
       return;
     }
-    
-    const payload = {
-      date,
-      time,
-      subject,
-      topic,
-      location: location || "Google Meet",
-      groupId: groupId || undefined,
-    };
-
+    setFormError("");
     try {
-      const response = await apiCreateSession(payload);
-      
+      const response = await apiCreateSession({
+        date,
+        time,
+        subject,
+        topic,
+        location: location.trim() || undefined,
+        groupId: groupId || undefined,
+      });
       const created = response.data.session || response.data;
       const newSession: SessionType = {
         id: created._id || created.id,
         _id: created._id || created.id,
-        date: created.date ? new Date(created.date).toISOString().split('T')[0] : date,
+        date: created.date ? new Date(created.date).toISOString().split("T")[0] : date,
         time: created.time || time,
-        location: created.location || location || "Google Meet",
+        location: created.location || "Google Meet",
         goal: created.topic || topic,
         meetingLink: created.meetingLink,
-        status: "attending"
+        status: "attending",
       };
-
       setSessions([newSession, ...sessions]);
-      setDate("");
-      setTime("");
-      setSubject("");
-      setTopic("");
-      setLocation("");
+      setDate(""); setTime(""); setSubject(""); setTopic(""); setLocation("");
     } catch (error: any) {
-      alert(error.response?.data?.message || error.message);
+      setFormError(error.response?.data?.message || error.message);
     }
   };
 
   const updateStatus = async (id: string, newStatus: string) => {
     try {
       await rsvpSession(id, { status: newStatus });
-      setSessions(sessions.map(s => s.id === id ? { ...s, status: newStatus } : s));
+      setSessions(sessions.map((s) => s.id === id ? { ...s, status: newStatus } : s));
     } catch (error: any) {
       alert(error.response?.data?.message || error.message);
     }
@@ -106,94 +106,78 @@ function StudySessionsPage() {
 
   return (
     <div className="study-sessions-container">
-      {/* Header with Google Auth sync */}
-      <div className="sessions-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1rem" }}>
+      <div className="sessions-header">
         <div>
-          <span className="sync-tag">⏱️ CALENDAR SYNC</span>
+          <span className="sync-tag">⏱️ Calendar Sync</span>
           <h1 className="main-title">Study Sessions</h1>
-          <p className="subtitle">
-            Lock in event parameters, state targets, and handle swift RSVPs for synchronous peer reviews.
-          </p>
+          <p className="subtitle">Schedule a session, auto-create a Google Meet when blank, and share the link instantly.</p>
         </div>
-        <a 
-          href="http://localhost:5001/api/google/auth" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            backgroundColor: "#4285F4",
-            color: "#ffffff",
-            padding: "0.6rem 1.2rem",
-            borderRadius: "6px",
-            textDecoration: "none",
-            fontSize: "0.9rem",
-            fontWeight: "600",
-            boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-            transition: "background-color 0.2s",
-            fontFamily: "inherit"
-          }}
-        >
-          📅 Connect Google Calendar
-        </a>
       </div>
 
       <div className="sessions-grid">
-        {/* Form */}
-        {isGroupAdmin ? (
         <div className="form-card">
-          <h3 className="form-title">📅 Schedule Session</h3>
-          <form onSubmit={handleCreateSession} className="session-form">
-            <div className="form-row">
-              <div className="form-group">
-                <label>DATE</label>
-                <input type="date" value={date} onChange={e => setDate(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>TIME</label>
-                <input type="time" value={time} onChange={e => setTime(e.target.value)} />
-              </div>
+          {isGroupAdmin ? (
+            <div className="session-form">
+              <h3 className="form-title">📅 Schedule Session</h3>
+              {formError && (
+                <Alert variant="danger" style={{ fontSize: "0.82rem", fontFamily: "JetBrains Mono, monospace" }}>
+                  {formError}
+                </Alert>
+              )}
+              <Form onSubmit={handleCreateSession} className="session-form">
+                <div className="form-row">
+                  <div className="form-group">
+                    <label className="form-label">DATE</label>
+                    <Form.Control type="date" value={date} onChange={(e) => setDate(e.target.value)} className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">TIME</label>
+                    <Form.Control type="time" value={time} onChange={(e) => setTime(e.target.value)} className="form-input" />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">SUBJECT / COURSE</label>
+                  <Form.Control type="text" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="e.g. CS101, BCA-302" className="form-input" />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">STUDY GOAL / TOPIC</label>
+                  <Form.Control type="text" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="e.g. Review Module 2 concepts..." className="form-input" />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">LOCATION (leave blank for Google Meet)</label>
+                  <Form.Control type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Optional: Room 402, Library..." className="form-input" />
+                </div>
+                <Button type="submit" className="submit-btn">🗓️ Deploy Session</Button>
+              </Form>
             </div>
-            <div className="form-group">
-              <label>SUBJECT / COURSE</label>
-              <input type="text" value={subject} onChange={e => setSubject(e.target.value)} placeholder="e.g. CS101, BCA-302" />
+          ) : (
+            <div>
+              <h3 className="form-title">Study Sessions</h3>
+              <p className="empty-state">Only the group admin can create a session. You can view and join scheduled sessions.</p>
             </div>
-            <div className="form-group">
-              <label>STUDY GOAL / TOPIC</label>
-              <input type="text" value={topic} onChange={e => setTopic(e.target.value)} placeholder="e.g. Review Module 2 concepts..." />
-            </div>
-            <div className="form-group">
-              <label>LOCATION (OR LEAVE BLANK FOR GOOGLE MEET)</label>
-              <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="e.g. Room 402, Library, etc." />
-            </div>
-            <button type="submit" className="submit-btn">
-              🗓️ Deploy Session
-            </button>
-          </form>
+          )}
         </div>
-        ) : (
-          <div className="form-card" style={{ alignSelf: "start" }}>
-            <h3 className="form-title">Study Sessions</h3>
-            <p className="empty-state">Only the group admin can create a session. You can view and join scheduled sessions below.</p>
-          </div>
-        )}
 
-        {/* Sessions Render */}
         <div className="slots-column">
-          <h3 className="slots-title">Upcoming Slots</h3>
+          <div className="slots-title-row">
+            <h3 className="slots-title">Upcoming Slots</h3>
+            {!isLoading && (
+              <Badge bg="secondary" style={{ fontSize: "0.8rem", fontWeight: 500 }}>
+                {sessions.length}
+              </Badge>
+            )}
+          </div>
 
           {isLoading ? (
-            <p className="empty-state">Loading sessions...</p>
+            <div className="loading-state">
+              <Spinner animation="border" style={{ color: "var(--forest)" }} />
+              <p className="mt-2">Loading sessions...</p>
+            </div>
           ) : sessions.length === 0 ? (
-            <p className="empty-state">No sessions deployed yet. Fill out the form to schedule one!</p>
+            <div className="empty-state">No sessions deployed yet. Fill out the form to schedule one!</div>
           ) : (
-            sessions.map(session => (
-              <SessionCard
-                key={session.id}
-                session={session}
-                onUpdateStatus={updateStatus}
-              />
+            sessions.map((session) => (
+              <SessionCard key={session.id} session={session} onUpdateStatus={updateStatus} />
             ))
           )}
         </div>

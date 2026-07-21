@@ -1,316 +1,225 @@
+// RegisterPage.tsx — Aditya
+// React Bootstrap: Form, Alert, Button, Card, Spinner, Row, Col
+// Concepts:
+//   - Controlled components (useState for each field)
+//   - useRef (anti-double-submit — taught in class)
+//   - Form validation
+
 import React, { useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import {
+  Container,
+  Card,
+  Form,
+  Button,
+  Alert,
+  Spinner,
+  Row,
+  Col,
+} from "react-bootstrap";
 import { registerUser } from "../../services/api";
 
 function RegisterPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // Controlled component state
+  const [name, setName]                     = useState("");
+  const [email, setEmail]                   = useState("");
+  const [password, setPassword]             = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [bio, setBio] = useState("");
-  const [errors, setErrors] = useState<any>({});
-  const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [bio, setBio]                       = useState("");
+  const [errors, setErrors]                 = useState<any>({});
+  const [errorMessage, setErrorMessage]     = useState("");
+  const [loading, setLoading]               = useState(false);
+
+  // useRef — prevents double submit (taught in class)
   const isSubmitting = useRef(false);
   const navigate = useNavigate();
 
-  // Validate all form fields
   const validateForm = () => {
     const tempErrors: any = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    // Name validation
     if (!name.trim()) {
       tempErrors.name = "Full name is required.";
     } else if (name.trim().length < 2) {
       tempErrors.name = "Name must be at least 2 characters long.";
     }
-
-    // Email validation
     if (!email) {
       tempErrors.email = "Email address is required.";
     } else if (!emailRegex.test(email)) {
       tempErrors.email = "Please enter a valid email address.";
     }
-
-    // Password validation (min 6 chars, alphanumeric recommendations)
     if (!password) {
       tempErrors.password = "Password is required.";
     } else if (password.length < 6) {
       tempErrors.password = "Password must be at least 6 characters.";
     }
-
-    // Password confirmation matching check
     if (!confirmPassword) {
       tempErrors.confirmPassword = "Please confirm your password.";
     } else if (password !== confirmPassword) {
       tempErrors.confirmPassword = "Passwords do not match.";
     }
-
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
 
-  const handleRegister = async (e) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    if (isSubmitting.current) return;
-
+    if (isSubmitting.current) return; // useRef guard
     isSubmitting.current = true;
     setLoading(true);
     setErrorMessage("");
-
     try {
-      const payload = {
-        name: name.trim(),
-        email: email.trim(),
-        password,
-        bio: bio.trim(),
-      };
-
-      await registerUser(payload);
+      await registerUser({ name: name.trim(), email: email.trim(), password, bio: bio.trim() });
       setLoading(false);
-      navigate("/login"); // Redirect to login page upon successful account creation
-    } catch (error) {
+      navigate("/login");
+    } catch (error: any) {
       isSubmitting.current = false;
       setLoading(false);
       if (!error.response) {
-        setErrorMessage(
-          "Unable to connect to the backend server. Please verify that the backend is running on port 5001."
-        );
+        setErrorMessage("Unable to connect to the backend server. Please verify the backend is running on port 5001.");
       } else {
-        setErrorMessage(
-          error.response.data?.message ||
-            "Failed to register. The email address might already be registered."
-        );
+        setErrorMessage(error.response.data?.message || "Failed to register. The email address might already be registered.");
       }
     }
   };
 
   return (
-    <div
-      className="edit-profile-page"
-      style={{
-        minHeight: "85vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+    <Container
+      className="d-flex align-items-center justify-content-center"
+      style={{ minHeight: "85vh", padding: "2rem 1rem" }}
     >
-      <main className="form-card" style={{ maxWidth: "500px", width: "100%" }}>
-        {/* Header Title */}
-        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-          <span className="profile-badge">🎓 JOIN US</span>
-          <h2 style={{ fontSize: "2rem", marginTop: "0.5rem" }}>
-            Create Account
-          </h2>
-          <p
-            style={{
-              color: "var(--text-secondary)",
-              fontSize: "0.9rem",
-              marginTop: "0.25rem",
-            }}
-          >
-            Build your profile, share resources, and study together.
-          </p>
-        </div>
-
-        {/* Global Error Message */}
-        {errorMessage && (
-          <div
-            style={{
-              backgroundColor: "rgba(224, 86, 86, 0.08)",
-              border: "1px solid rgba(224, 86, 86, 0.2)",
-              color: "var(--coral)",
-              padding: "0.75rem 1rem",
-              borderRadius: "6px",
-              fontSize: "0.85rem",
-              marginBottom: "1.5rem",
-              fontFamily: "JetBrains Mono, monospace",
-            }}
-          >
-            ⚠️ {errorMessage}
-          </div>
-        )}
-
-        {/* Form Inputs */}
-        <form
-          onSubmit={handleRegister}
-          style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
-        >
-          <div>
-            <label className="field-label">Full Name</label>
-            <input
-              type="text"
-              className="field-input"
-              placeholder="e.g. Harmeet Singh"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                if (errors.name) setErrors((prev) => ({ ...prev, name: null }));
-              }}
-            />
-            {errors.name && (
-              <span
-                style={{
-                  color: "var(--coral)",
-                  fontSize: "0.75rem",
-                  fontFamily: "JetBrains Mono, monospace",
-                  marginTop: "0.25rem",
-                  display: "block",
-                }}
-              >
-                {errors.name}
-              </span>
-            )}
+      <Card
+        style={{
+          maxWidth: 520,
+          width: "100%",
+          background: "var(--card-bg)",
+          border: "2px solid var(--ink)",
+          borderRadius: 8,
+          boxShadow: "6px 6px 0 var(--ink)",
+          color: "var(--ink)",
+        }}
+      >
+        <Card.Body className="p-4">
+          {/* Header */}
+          <div className="text-center mb-4">
+            <span className="profile-badge">🎓 JOIN US</span>
+            <h2 className="mt-2" style={{ fontSize: "2rem" }}>Create Account</h2>
+            <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem" }}>
+              Build your profile, share resources, and study together.
+            </p>
           </div>
 
-          <div>
-            <label className="field-label">Email Address</label>
-            <input
-              type="email"
-              className="field-input"
-              placeholder="name@university.edu"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (errors.email)
-                  setErrors((prev) => ({ ...prev, email: null }));
-              }}
-            />
-            {errors.email && (
-              <span
-                style={{
-                  color: "var(--coral)",
-                  fontSize: "0.75rem",
-                  fontFamily: "JetBrains Mono, monospace",
-                  marginTop: "0.25rem",
-                  display: "block",
-                }}
-              >
-                {errors.email}
-              </span>
-            )}
-          </div>
+          {errorMessage && (
+            <Alert variant="danger" style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.85rem" }}>
+              ⚠️ {errorMessage}
+            </Alert>
+          )}
 
-          <div>
-            <label className="field-label">About You (Short Bio)</label>
-            <textarea
-              className="field-input"
-              placeholder="Tell others about your study focus, major, or hobbies..."
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              style={{
-                minHeight: "80px",
-                resize: "vertical",
-                padding: "0.75rem",
-              }}
-            />
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-            }}
-          >
-            <div>
-              <label className="field-label">Password</label>
-              <input
-                type="password"
-                className="field-input"
-                placeholder="Choose password"
-                value={password}
+          <Form onSubmit={handleRegister}>
+            {/* Full Name */}
+            <Form.Group className="mb-3">
+              <Form.Label className="field-label">Full Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="e.g. Harmeet Singh"
+                value={name}
+                isInvalid={!!errors.name}
                 onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (errors.password)
-                    setErrors((prev) => ({ ...prev, password: null }));
+                  setName(e.target.value);
+                  if (errors.name) setErrors((p: any) => ({ ...p, name: null }));
                 }}
-              />
-              {errors.password && (
-                <span
-                  style={{
-                    color: "var(--coral)",
-                    fontSize: "0.75rem",
-                    fontFamily: "JetBrains Mono, monospace",
-                    marginTop: "0.25rem",
-                    display: "block",
-                  }}
-                >
-                  {errors.password}
-                </span>
-              )}
-            </div>
-
-            <div>
-              <label className="field-label">Confirm Password</label>
-              <input
-                type="password"
                 className="field-input"
-                placeholder="Repeat password"
-                value={confirmPassword}
-                onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  if (errors.confirmPassword)
-                    setErrors((prev) => ({ ...prev, confirmPassword: null }));
-                }}
               />
-              {errors.confirmPassword && (
-                <span
-                  style={{
-                    color: "var(--coral)",
-                    fontSize: "0.75rem",
-                    fontFamily: "JetBrains Mono, monospace",
-                    marginTop: "0.25rem",
-                    display: "block",
-                  }}
-                >
-                  {errors.confirmPassword}
-                </span>
-              )}
-            </div>
-          </div>
+              <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+            </Form.Group>
 
-          <button
-            type="submit"
-            className="btn-primary"
-            disabled={loading}
-            style={{
-              width: "100%",
-              marginTop: "1rem",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {loading ? "Creating Account..." : "Create Account"}
-          </button>
+            {/* Email */}
+            <Form.Group className="mb-3">
+              <Form.Label className="field-label">Email Address</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="name@university.edu"
+                value={email}
+                isInvalid={!!errors.email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) setErrors((p: any) => ({ ...p, email: null }));
+                }}
+                className="field-input"
+              />
+              <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+            </Form.Group>
 
-          {/* Navigation Helper */}
-          <div
-            style={{
-              textAlign: "center",
-              marginTop: "1.25rem",
-              fontSize: "0.9rem",
-            }}
-          >
-            <span style={{ color: "var(--text-secondary)" }}>
-              Already have an account?{" "}
-            </span>
-            <Link
-              to="/login"
-              style={{
-                color: "var(--teal)",
-                fontWeight: "600",
-                textDecoration: "none",
-              }}
+            {/* Bio */}
+            <Form.Group className="mb-3">
+              <Form.Label className="field-label">About You (Short Bio)</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={2}
+                placeholder="Tell others about your study focus, major, or hobbies..."
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                className="field-input"
+              />
+            </Form.Group>
+
+            {/* Password row — Bootstrap Row/Col grid */}
+            <Row className="mb-3">
+              <Col>
+                <Form.Group>
+                  <Form.Label className="field-label">Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Choose password"
+                    value={password}
+                    isInvalid={!!errors.password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (errors.password) setErrors((p: any) => ({ ...p, password: null }));
+                    }}
+                    className="field-input"
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label className="field-label">Confirm Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Repeat password"
+                    value={confirmPassword}
+                    isInvalid={!!errors.confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                      if (errors.confirmPassword) setErrors((p: any) => ({ ...p, confirmPassword: null }));
+                    }}
+                    className="field-input"
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.confirmPassword}</Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Button
+              type="submit"
+              className="btn-primary w-100 mt-2 d-flex align-items-center justify-content-center gap-2"
+              disabled={loading}
             >
-              Sign In
-            </Link>
-          </div>
-        </form>
-      </main>
-    </div>
+              {loading && <Spinner size="sm" animation="border" />}
+              {loading ? "Creating Account..." : "Create Account"}
+            </Button>
+
+            <div className="text-center mt-3" style={{ fontSize: "0.9rem" }}>
+              <span style={{ color: "var(--text-secondary)" }}>Already have an account? </span>
+              <Link to="/login" style={{ color: "var(--teal)", fontWeight: 600, textDecoration: "none" }}>
+                Sign In
+              </Link>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }
 

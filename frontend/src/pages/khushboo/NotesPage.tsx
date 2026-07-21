@@ -1,20 +1,27 @@
-// NotesPage.jsx — Khushboo
-// Task: Notes Sharing — upload form, list view, filter by subject, delete
+// NotesPage.tsx — Khushboo
+// React Bootstrap: Container, Row, Col, Card, Form, Alert, Badge, Button, ListGroup
+// Concepts:
+//   - useState (controlled form inputs)
+//   - useEffect (fetch notes on mount)
 
 import React, { useState, useEffect } from "react";
-import "../../styles/khushboo.css";
+import {
+  Container, Row, Col, Card, Form, Button, Alert, Badge, InputGroup,
+} from "react-bootstrap";
 import { getNotes, createNote, deleteNoteApi } from "../../services/api";
 import NoteCard from "../../components/khushboo/NoteCard";
 
 function NotesPage() {
-  const [title, setTitle] = useState("");
-  const [subject, setSubject] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [notes, setNotes] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [errors, setErrors] = useState<any>({});
+  const [title, setTitle]               = useState("");
+  const [subject, setSubject]           = useState("");
+  const [searchQuery, setSearchQuery]   = useState("");
+  const [notes, setNotes]               = useState<any[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [errors, setErrors]             = useState<any>({});
+  const [uploading, setUploading]       = useState(false);
+  const [uploadError, setUploadError]   = useState("");
 
-  // Fetch notes on mount
+  // useEffect — fetch all notes on mount (UseEffectExample1 pattern)
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -39,9 +46,9 @@ function NotesPage() {
     if (!selectedFile) {
       tempErrors.file = "Please select a notes document to upload.";
     } else {
-      const allowedExtensions = ['pdf', 'doc', 'docx', 'txt', 'ppt', 'pptx'];
-      const fileExt = selectedFile.name.split('.').pop().toLowerCase();
-      if (!allowedExtensions.includes(fileExt)) {
+      const allowedExtensions = ["pdf", "doc", "docx", "txt", "ppt", "pptx"];
+      const fileExt = selectedFile.name.split(".").pop()?.toLowerCase();
+      if (!fileExt || !allowedExtensions.includes(fileExt)) {
         tempErrors.file = "Allowed formats: PDF, DOCX, DOC, TXT, PPT, PPTX.";
       }
       if (selectedFile.size > 10 * 1024 * 1024) {
@@ -52,151 +59,188 @@ function NotesPage() {
     return Object.keys(tempErrors).length === 0;
   };
 
-  const addNote = async () => {
+  const addNote = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!validateForm()) return;
     try {
+      setUploading(true);
+      setUploadError("");
       const formData = new FormData();
       formData.append("title", title.trim());
       formData.append("subject", subject.trim().toUpperCase());
-      formData.append("description", "Uploaded notes document: " + selectedFile.name);
-      formData.append("file", selectedFile);
-
+      formData.append("description", "Uploaded notes document: " + selectedFile!.name);
+      formData.append("file", selectedFile!);
       const response = await createNote(formData);
-      setNotes([...notes, response.data]);
+      setNotes((prev) => [...prev, response.data]);
       setTitle("");
       setSubject("");
       setSelectedFile(null);
       setErrors({});
       const fileInput = document.getElementById("note-file-input") as HTMLInputElement;
       if (fileInput) fileInput.value = "";
-    } catch (error) {
-      alert("Failed to upload note to database: " + (error.response?.data?.message || error.message));
+    } catch (error: any) {
+      setUploadError("Failed to upload note: " + (error.response?.data?.message || error.message));
+    } finally {
+      setUploading(false);
     }
   };
 
-  const deleteNote = async (id) => {
+  const deleteNote = async (id: string) => {
     try {
       await deleteNoteApi(id);
-      setNotes(notes.filter((note) => note._id !== id && note.id !== id));
-    } catch (error) {
-      alert("Failed to delete note from database: " + (error.response?.data?.message || error.message));
+      setNotes((prev) => prev.filter((note) => note._id !== id && note.id !== id));
+    } catch (error: any) {
+      alert("Failed to delete note: " + (error.response?.data?.message || error.message));
     }
   };
 
-  const filteredNotes = notes.filter(note => 
-    note.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    note.subject?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredNotes = notes.filter(
+    (note) =>
+      note.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      note.subject?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="notes-page">
-      
-      {/* Header Section */}
-      <header className="notes-page__header">
+    <Container style={{ maxWidth: 1200, padding: "2.5rem 1rem" }}>
+
+      {/* Header */}
+      <div className="mb-4">
         <span className="notes-page__eyebrow">📚 NOTES REPOSITORY</span>
         <h1 className="notes-page__title">Notes Sharing</h1>
         <p className="notes-page__subtitle">
           Upload your study notes, organize them by subject, and help your peers learn together.
         </p>
-      </header>
+      </div>
 
-      {/* Statistics Dashboard Section */}
-      <section className="stats-grid">
-        <div className="stat-card">
-          <h2>{notes.length}</h2>
-          <p>Total Notes</p>
-        </div>
-        <div className="stat-card">
-          <h2>{new Set(notes.map(n => n.subject.toLowerCase())).size}</h2>
-          <p>Unique Subjects</p>
-        </div>
-      </section>
+      {/* Stats Row — Bootstrap Cards */}
+      <Row className="g-3 mb-4">
+        <Col xs={6} md={3}>
+          <Card
+            className="text-center stat-card"
+            style={{ background: "var(--card-bg)", border: "1px solid rgba(35,40,31,0.12)", color: "var(--ink)" }}
+          >
+            <Card.Body>
+              <h2 className="mb-0" style={{ fontFamily: "Fraunces, serif", fontSize: "2rem" }}>{notes.length}</h2>
+              <p className="mb-0" style={{ fontSize: "0.8rem", fontFamily: "JetBrains Mono, monospace" }}>Total Notes</p>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={6} md={3}>
+          <Card
+            className="text-center stat-card"
+            style={{ background: "var(--card-bg)", border: "1px solid rgba(35,40,31,0.12)", color: "var(--ink)" }}
+          >
+            <Card.Body>
+              <h2 className="mb-0" style={{ fontFamily: "Fraunces, serif", fontSize: "2rem" }}>
+                {new Set(notes.map((n) => n.subject?.toLowerCase())).size}
+              </h2>
+              <p className="mb-0" style={{ fontSize: "0.8rem", fontFamily: "JetBrains Mono, monospace" }}>Unique Subjects</p>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
-      {/* Layout Split Structure */}
-      <div className="notes-page__layout">
-        
-        {/* Left Sidebar: Upload Document Form */}
-        <aside className="upload-card">
-          <h3 className="upload-card__title">📝 Add New Note</h3>
-          <div className="upload-card__fields">
-            <div>
-              <label className="field-label">Note Title</label>
-              <input
-                type="text"
-                className="field-input"
-                placeholder="e.g. Computer Networks Basics"
-                value={title}
-                onChange={(e) => {
-                  setTitle(e.target.value);
-                  if (errors.title) setErrors(prev => ({ ...prev, title: null }));
-                }}
-              />
-              {errors.title && (
-                <span style={{ color: "var(--coral)", fontSize: "0.75rem", fontFamily: "JetBrains Mono, monospace", marginTop: "0.25rem", display: "block" }}>
-                  {errors.title}
-                </span>
+      <Row className="g-4">
+        {/* Upload Sidebar */}
+        <Col md={4}>
+          <Card
+            style={{
+              background: "var(--card-bg)",
+              border: "2px solid var(--ink)",
+              borderRadius: 8,
+              boxShadow: "4px 4px 0 var(--ink)",
+              color: "var(--ink)",
+              position: "sticky",
+              top: "80px",
+            }}
+          >
+            <Card.Body className="p-4">
+              <h3 className="upload-card__title">📝 Add New Note</h3>
+
+              {uploadError && (
+                <Alert variant="danger" style={{ fontSize: "0.82rem", fontFamily: "JetBrains Mono, monospace" }}>
+                  {uploadError}
+                </Alert>
               )}
-            </div>
 
-            <div>
-              <label className="field-label">Subject / Course</label>
-              <input
-                type="text"
-                className="field-input"
-                placeholder="e.g. BCA-302"
-                value={subject}
-                onChange={(e) => {
-                  setSubject(e.target.value);
-                  if (errors.subject) setErrors(prev => ({ ...prev, subject: null }));
-                }}
-              />
-              {errors.subject && (
-                <span style={{ color: "var(--coral)", fontSize: "0.75rem", fontFamily: "JetBrains Mono, monospace", marginTop: "0.25rem", display: "block" }}>
-                  {errors.subject}
-                </span>
-              )}
-            </div>
+              <Form onSubmit={addNote}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="field-label">Note Title</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="e.g. Computer Networks Basics"
+                    value={title}
+                    isInvalid={!!errors.title}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                      if (errors.title) setErrors((p: any) => ({ ...p, title: null }));
+                    }}
+                    className="field-input"
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
+                </Form.Group>
 
-            <div>
-              <label className="field-label">Notes Document (.pdf, .docx, .txt, .ppt)</label>
-              <input
-                type="file"
-                id="note-file-input"
-                className="field-input"
-                accept=".pdf,.doc,.docx,.txt,.ppt,.pptx"
-                onChange={(e) => {
-                  setSelectedFile(e.target.files[0]);
-                  if (errors.file) setErrors(prev => ({ ...prev, file: null }));
-                }}
-                style={{ padding: "0.5rem" }}
-              />
-              {errors.file && (
-                <span style={{ color: "var(--coral)", fontSize: "0.75rem", fontFamily: "JetBrains Mono, monospace", marginTop: "0.25rem", display: "block" }}>
-                  {errors.file}
-                </span>
-              )}
-            </div>
+                <Form.Group className="mb-3">
+                  <Form.Label className="field-label">Subject / Course</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="e.g. BCA-302"
+                    value={subject}
+                    isInvalid={!!errors.subject}
+                    onChange={(e) => {
+                      setSubject(e.target.value);
+                      if (errors.subject) setErrors((p: any) => ({ ...p, subject: null }));
+                    }}
+                    className="field-input"
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.subject}</Form.Control.Feedback>
+                </Form.Group>
 
-            <button onClick={addNote} className="btn-primary">
-              ⬆️ Upload Note
-            </button>
-          </div>
-        </aside>
+                <Form.Group className="mb-4">
+                  <Form.Label className="field-label">Notes Document</Form.Label>
+                  <Form.Control
+                    type="file"
+                    id="note-file-input"
+                    accept=".pdf,.doc,.docx,.txt,.ppt,.pptx"
+                    isInvalid={!!errors.file}
+                    onChange={(e: any) => {
+                      setSelectedFile(e.target.files[0]);
+                      if (errors.file) setErrors((p: any) => ({ ...p, file: null }));
+                    }}
+                    className="field-input"
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.file}</Form.Control.Feedback>
+                  <Form.Text muted style={{ fontSize: "0.73rem" }}>PDF, DOCX, TXT, PPT · Max 10MB</Form.Text>
+                </Form.Group>
 
-        {/* Right Section: Search and Dynamic Feed */}
-        <main>
-          <div className="search-box">
-            <input 
+                <Button type="submit" className="btn-primary w-100" disabled={uploading}>
+                  {uploading ? "Uploading..." : "⬆️ Upload Note"}
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* Notes Feed */}
+        <Col md={8}>
+          {/* Search */}
+          <InputGroup className="mb-4">
+            <InputGroup.Text style={{ background: "var(--card-bg)", border: "1.5px solid var(--ink)", color: "var(--ink)" }}>🔍</InputGroup.Text>
+            <Form.Control
               type="text"
-              className="search-input"
-              placeholder="🔍 Search notes by title or subject..."
+              placeholder="Search notes by title or subject..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+              style={{ border: "1.5px solid var(--ink)", background: "var(--card-bg)", color: "var(--ink)" }}
             />
-          </div>
+          </InputGroup>
 
           <h3 className="notes-list__heading">
-            <li>📖 All Notes ({filteredNotes.length})</li>
+            📖 All Notes{" "}
+            <Badge bg="secondary" style={{ fontSize: "0.8rem", fontWeight: 500 }}>
+              {filteredNotes.length}
+            </Badge>
           </h3>
 
           {filteredNotes.length === 0 ? (
@@ -204,18 +248,13 @@ function NotesPage() {
           ) : (
             <div className="notes-grid">
               {filteredNotes.map((note) => (
-                <NoteCard
-                  key={note._id || note.id}
-                  note={note}
-                  onDelete={deleteNote}
-                />
+                <NoteCard key={note._id || note.id} note={note} onDelete={deleteNote} />
               ))}
             </div>
           )}
-        </main>
-
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
