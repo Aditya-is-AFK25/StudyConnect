@@ -7,7 +7,21 @@ exports.getRecommendations = async (req, res) => {
       return res.status(404).json({ message: 'User not found.' });
     }
 
-    const candidates = await User.find({ _id: { $ne: currentUser._id } }).select('-password');
+    const searchSubject = req.query.subject;
+    const query = {
+      _id: { $ne: currentUser._id } //$ne = not equal to
+    };
+
+    // if user searched for a subject 
+    if (searchSubject) {
+      query.subjects = {
+        $regex: searchSubject,
+        $options: "i" // ignore case 
+      };
+    }
+
+    //fetch matching users while hiding passwords
+    const candidates = await User.find(query).select("-password");
 
     const rankedMatches = candidates
       .map((candidate) => {
