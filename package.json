@@ -1,6 +1,16 @@
 {
+  "name": "studyconnect",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c blue,green \"npm run start --prefix backend\" \"npm run dev --prefix frontend\"",
+    "backend": "npm run start --prefix backend",
+    "frontend": "npm run dev --prefix frontend"
+  },
   "dependencies": {
     "express": "^5.2.1",
     "mongoose": "^9.7.4"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.5"
   }
 }
